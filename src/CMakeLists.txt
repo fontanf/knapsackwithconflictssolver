@@ -25,4 +25,15 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
         Boost::program_options)
     set_target_properties(KnapsackWithConflictsSolver_main PROPERTIES OUTPUT_NAME "knapsackwithconflictssolver")
     install(TARGETS KnapsackWithConflictsSolver_main)
+
+    add_executable(KnapsackWithConflictsSolver_mps_writer_main)
+    target_sources(KnapsackWithConflictsSolver_mps_writer_main PRIVATE
+        mps_writer_main.cpp)
+    target_link_libraries(KnapsackWithConflictsSolver_mps_writer_main PUBLIC
+        KnapsackWithConflictsSolver_knapsack_with_conflicts
+        KnapsackWithConflictsSolver_milp
+        Boost::program_options
+        Boost::filesystem)
+    set_target_properties(KnapsackWithConflictsSolver_mps_writer_main PROPERTIES OUTPUT_NAME "knapsackwithconflictssolver_mps_writer")
+    install(TARGETS KnapsackWithConflictsSolver_mps_writer_main)
 endif()
