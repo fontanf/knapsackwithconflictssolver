@@ -7,6 +7,26 @@ target_link_libraries(KnapsackWithConflictsSolver_greedy PUBLIC
     KnapsackWithConflictsSolver_knapsack_with_conflicts)
 add_library(KnapsackWithConflictsSolver::greedy ALIAS KnapsackWithConflictsSolver_greedy)
 
+add_library(KnapsackWithConflictsSolver_sequential_decomposition)
+target_sources(KnapsackWithConflictsSolver_sequential_decomposition PRIVATE
+    sequential_decomposition.cpp)
+target_include_directories(KnapsackWithConflictsSolver_sequential_decomposition PUBLIC
+    ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(KnapsackWithConflictsSolver_sequential_decomposition PUBLIC
+    KnapsackWithConflictsSolver_knapsack_with_conflicts
+    SetCoveringSolver_local_search_row_weighting
+    KnapsackSolver::knapsack::dynamic_programming_primal_dual)
+add_library(KnapsackWithConflictsSolver::sequential_decomposition ALIAS KnapsackWithConflictsSolver_sequential_decomposition)
+
+add_library(KnapsackWithConflictsSolver_greedy_best)
+target_sources(KnapsackWithConflictsSolver_greedy_best PRIVATE
+    greedy_best.cpp)
+target_include_directories(KnapsackWithConflictsSolver_greedy_best PUBLIC
+    ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(KnapsackWithConflictsSolver_greedy_best PUBLIC
+    KnapsackWithConflictsSolver_knapsack_with_conflicts)
+add_library(KnapsackWithConflictsSolver::greedy_best ALIAS KnapsackWithConflictsSolver_greedy_best)
+
 add_library(KnapsackWithConflictsSolver_milp)
 target_sources(KnapsackWithConflictsSolver_milp PRIVATE
     milp.cpp)

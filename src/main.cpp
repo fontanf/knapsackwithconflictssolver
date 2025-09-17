@@ -2,7 +2,10 @@
 
 #include "knapsackwithconflictssolver/solution.hpp"
 #include "knapsackwithconflictssolver/algorithms/greedy.hpp"
+#include "knapsackwithconflictssolver/algorithms/sequential_decomposition.hpp"
+#include "knapsackwithconflictssolver/algorithms/greedy_best.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp.hpp"
+
 #ifdef XPRESS_FOUND
 #include "xprs.h"
 #endif
@@ -72,6 +75,20 @@ Output run(
         read_args(parameters, vm);
         return greedy(instance, parameters);
 
+    } else if (algorithm == "sequential-decomposition") {
+        SequentialDecompositionParameters parameters;
+        read_args(parameters, vm);
+        if (vm.count("stable-weight-strategy")) {
+            parameters.stable_weight_strategy
+                = vm["stable-weight-strategy"].as<int>();
+        }
+        return sequential_decomposition(instance, parameters);
+
+    } else if (algorithm == "greedy-best") {
+        Parameters parameters;
+        read_args(parameters, vm);
+        return greedy_best(instance, parameters);
+
     } else if (algorithm == "milp") {
 #ifdef XPRESS_FOUND
         XPRSinit(NULL);
@@ -105,7 +122,6 @@ int main(int argc, char *argv[])
         ("input,i", po::value<std::string>()->required(), "set input file (required)")
         ("format,f", po::value<std::string>()->default_value(""), "set input file format (default: standard)")
         ("certificate-format,", po::value<std::string>()->default_value(""), "set certificate file format (default: standard)")
-        ("unicost,u", "set unicost")
         ("output,o", po::value<std::string>(), "set JSON output file")
         ("initial-solution,", po::value<std::string>(), "")
         ("certificate,c", po::value<std::string>(), "set certificate file")
@@ -117,9 +133,8 @@ int main(int argc, char *argv[])
         ("log,l", po::value<std::string>(), "set log file")
         ("log-to-stderr", "write log to stderr")
 
-        ("maximum-number-of-iterations,", po::value<Counter>(), "set the maximum number of iterations")
-        ("maximum-number-of-iterations-without-improvement,", po::value<Counter>(), "set the maximum number of iterations without improvement")
-        ("solver,", po::value<mathoptsolverscmake::SolverName>(), "set solver")
+        ("stable-weight-strategy,", po::value<int>(), "set stable weight strategy (sequential-decomposition)")
+        ("solver,", po::value<mathoptsolverscmake::SolverName>(), "set solver (milp)")
         ;
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);

@@ -19,7 +19,10 @@ Objective:
 
 ## Implemented algorithms
 
-- Greedy `--algorithm greedy`
+- Fast algorithms
+  - Greedy `--algorithm greedy`
+  - Sequential decomposition (maximum weight independent set then knapsack) `--algorithm sequential-decomposition --stable-weight-strategy 0`
+  - Best greedy (greedy + sequential decomposition) `--algorithm greedy-best`
 
 - Mixed integer linear programming `--algorithm milp`
 

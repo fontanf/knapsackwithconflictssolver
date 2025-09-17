@@ -21,6 +21,8 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
         main.cpp)
     target_link_libraries(KnapsackWithConflictsSolver_main PUBLIC
         KnapsackWithConflictsSolver_greedy
+        KnapsackWithConflictsSolver_sequential_decomposition
+        KnapsackWithConflictsSolver_greedy_best
         KnapsackWithConflictsSolver_milp
         Boost::program_options)
     set_target_properties(KnapsackWithConflictsSolver_main PROPERTIES OUTPUT_NAME "knapsackwithconflictssolver")

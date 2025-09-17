@@ -58,14 +58,15 @@ FetchContent_Declare(
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../localsearchsolver/")
 FetchContent_MakeAvailable(localsearchsolver)
 
-set(STABLESOLVER_USE_CBC OFF)
+set(SETCOVERINGSOLVER_USE_CBC OFF)
+set(COLUMNGENERATIONSOLVER_USE_CLP OFF)
 FetchContent_Declare(
-    stablesolver
-    GIT_REPOSITORY https://github.com/fontanf/stablesolver.git
-    GIT_TAG 3c374c789c766111ac953e2a46d21881f5841cd0
-    #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../stablesolver/"
+    setcoveringsolver
+    GIT_REPOSITORY https://github.com/fontanf/setcoveringsolver.git
+    GIT_TAG cdcf22bd00676efbcbd51280d0870cc15ec0f5e7
+    #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../setcoveringsolver/"
     EXCLUDE_FROM_ALL)
-FetchContent_MakeAvailable(stablesolver)
+FetchContent_MakeAvailable(setcoveringsolver)
 
 FetchContent_Declare(
     knapsacksolver
