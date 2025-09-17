@@ -45,8 +45,25 @@ Output knapsackwithconflictssolver::greedy(
 
         // Check capacity.
         const Item& item = instance.item(item_id);
-        if (solution.weight() + item.weight > instance.capacity())
-            continue;
+        if (solution.weight() + item.weight > instance.capacity()) {
+            solution.add(item_id);
+            ItemId item_best_id = -1;
+            Profit profit_best = 0;
+            for (ItemId item_id: solution.items()) {
+                const Item& item = instance.item(item_id);
+                Profit profit = solution.profit() - item.profit;
+                Weight weight = solution.weight() - item.weight;
+                if (weight > instance.capacity())
+                    continue;
+                if (item_best_id == -1
+                        || profit_best < profit) {
+                    item_best_id = item_id;
+                    profit_best = profit;
+                }
+            }
+            solution.remove(item_best_id);
+            break;
+        }
 
         // Add the item to the solution.
         solution.add(item_id);
