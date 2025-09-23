@@ -30,6 +30,7 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
         KnapsackWithConflictsSolver_milp_3
         KnapsackWithConflictsSolver_lagrangian_relaxation
         KnapsackWithConflictsSolver_column_generation
+        KnapsackWithConflictsSolver_tree_search
         Boost::program_options)
     if(KNAPSACKWITHCONFLICTSSOLVER_USE_ORTOOLS)
         target_link_libraries(KnapsackWithConflictsSolver_main PUBLIC

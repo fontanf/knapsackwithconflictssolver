@@ -109,3 +109,13 @@ target_link_libraries(KnapsackWithConflictsSolver_column_generation PUBLIC
     KnapsackSolver::dynamic_programming_primal_dual
     OptimizationTools::graph)
 add_library(KnapsackWithConflictsSolver::column_generation ALIAS KnapsackWithConflictsSolver_column_generation)
+
+add_library(KnapsackWithConflictsSolver_tree_search)
+target_sources(KnapsackWithConflictsSolver_tree_search PRIVATE
+    tree_search.cpp)
+target_include_directories(KnapsackWithConflictsSolver_tree_search PUBLIC
+    ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(KnapsackWithConflictsSolver_tree_search PUBLIC
+    KnapsackWithConflictsSolver_knapsack_with_conflicts
+    TreeSearchSolver_treesearchsolver)
+add_library(KnapsackWithConflictsSolver::tree_search ALIAS KnapsackWithConflictsSolver_tree_search)

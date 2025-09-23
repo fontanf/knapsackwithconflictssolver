@@ -13,6 +13,7 @@
 #endif
 #include "knapsackwithconflictssolver/algorithms/lagrangian_relaxation.hpp"
 #include "knapsackwithconflictssolver/algorithms/column_generation.hpp"
+#include "knapsackwithconflictssolver/algorithms/tree_search.hpp"
 
 #ifdef XPRESS_FOUND
 #include "xprs.h"
@@ -213,6 +214,11 @@ Output run(
         ColumnGenerationParameters parameters;
         read_args(parameters, vm);
         return column_generation(instance, parameters);
+
+    } else if (algorithm == "tree-search") {
+        TreeSearchParameters parameters;
+        read_args(parameters, vm);
+        return tree_search(instance, parameters);
 
     } else {
         throw std::invalid_argument(
