@@ -36,3 +36,13 @@ target_link_libraries(KnapsackWithConflictsSolver_milp PUBLIC
     KnapsackWithConflictsSolver_knapsack_with_conflicts
     MathOptSolversCMake::milp)
 add_library(KnapsackWithConflictsSolver::milp ALIAS KnapsackWithConflictsSolver_milp)
+
+add_library(KnapsackWithConflictsSolver_tree_search)
+target_sources(KnapsackWithConflictsSolver_tree_search PRIVATE
+    tree_search.cpp)
+target_include_directories(KnapsackWithConflictsSolver_tree_search PUBLIC
+    ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(KnapsackWithConflictsSolver_tree_search PUBLIC
+    KnapsackWithConflictsSolver_knapsack_with_conflicts
+    TreeSearchSolver_treesearchsolver)
+add_library(KnapsackWithConflictsSolver::tree_search ALIAS KnapsackWithConflictsSolver_tree_search)

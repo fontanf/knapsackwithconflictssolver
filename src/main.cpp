@@ -5,6 +5,7 @@
 #include "knapsackwithconflictssolver/algorithms/sequential_decomposition.hpp"
 #include "knapsackwithconflictssolver/algorithms/greedy_best.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp.hpp"
+#include "knapsackwithconflictssolver/algorithms/tree_search.hpp"
 
 #ifdef XPRESS_FOUND
 #include "xprs.h"
@@ -104,6 +105,11 @@ Output run(
         XPRSfree();
 #endif
         return milp_output;
+
+    } else if (algorithm == "tree-search") {
+        TreeSearchParameters parameters;
+        read_args(parameters, vm);
+        return tree_search(instance, parameters);
 
     } else {
         throw std::invalid_argument(

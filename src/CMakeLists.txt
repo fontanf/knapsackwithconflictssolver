@@ -24,6 +24,7 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
         KnapsackWithConflictsSolver_sequential_decomposition
         KnapsackWithConflictsSolver_greedy_best
         KnapsackWithConflictsSolver_milp
+        KnapsackWithConflictsSolver_tree_search
         Boost::program_options)
     set_target_properties(KnapsackWithConflictsSolver_main PROPERTIES OUTPUT_NAME "knapsackwithconflictssolver")
     install(TARGETS KnapsackWithConflictsSolver_main)
