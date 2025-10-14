@@ -4,8 +4,8 @@
 
 #include "setcoveringsolver/instance_builder.hpp"
 #include "setcoveringsolver/algorithms/greedy.hpp"
-#include "knapsacksolver/knapsack/instance_builder.hpp"
-#include "knapsacksolver/knapsack/algorithms/dynamic_programming_primal_dual.hpp"
+#include "knapsacksolver/instance_builder.hpp"
+#include "knapsacksolver/algorithms/dynamic_programming_primal_dual.hpp"
 
 using namespace knapsackwithconflictssolver;
 
@@ -57,7 +57,7 @@ Output knapsackwithconflictssolver::sequential_decomposition(
             const std::string&)
     {
         // Build knapsack instance.
-        knapsacksolver::knapsack::InstanceBuilder kp_instance_builder;
+        knapsacksolver::InstanceBuilder kp_instance_builder;
         kp_instance_builder.set_capacity(instance.capacity());
         std::vector<ItemId> kp_to_orig;
         for (ItemId item_id = 0;
@@ -69,18 +69,18 @@ Output knapsackwithconflictssolver::sequential_decomposition(
             kp_instance_builder.add_item(item.profit, item.weight);
             kp_to_orig.push_back(item_id);
         }
-        knapsacksolver::knapsack::Instance kp_instance = kp_instance_builder.build();
+        knapsacksolver::Instance kp_instance = kp_instance_builder.build();
 
-        knapsacksolver::knapsack::DynamicProgrammingPrimalDualParameters kp_parameters;
+        knapsacksolver::DynamicProgrammingPrimalDualParameters kp_parameters;
         //kp_parameters.timer = parameters.timer;
         kp_parameters.verbosity_level = 0;
-        auto kp_output = knapsacksolver::knapsack::dynamic_programming_primal_dual(
+        auto kp_output = knapsacksolver::dynamic_programming_primal_dual(
                 kp_instance,
                 kp_parameters);
 
         // Retrieve solution.
         Solution solution(instance);
-        for (knapsacksolver::knapsack::ItemId kp_item_id = 0;
+        for (knapsacksolver::ItemId kp_item_id = 0;
                 kp_item_id < kp_instance.number_of_items();
                 ++kp_item_id) {
             if (!kp_output.solution.contains(kp_item_id))

@@ -17,7 +17,7 @@ endif()
 FetchContent_Declare(
     optimizationtools
     GIT_REPOSITORY https://github.com/fontanf/optimizationtools.git
-    GIT_TAG 6d2411a74230be157d1ede47e88d30a68854b8ac
+    GIT_TAG e8c379203792fcad764cce239986b325619475fd
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../optimizationtools/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(optimizationtools)
@@ -38,6 +38,16 @@ FetchContent_Declare(
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(mathoptsolverscmake)
 
+set(KNAPSACKSOLVER_BUILD_MAIN OFF)
+set(KNAPSACKSOLVER_BUILD_TEST OFF)
+FetchContent_Declare(
+    knapsacksolver
+    GIT_REPOSITORY https://github.com/fontanf/knapsacksolver.git
+    GIT_TAG 1d7a689f88e953c099087a31f174cb6646002f9f
+    #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../knapsacksolver/"
+    EXCLUDE_FROM_ALL)
+FetchContent_MakeAvailable(knapsacksolver)
+
 # Fetch fontanf/treesearchsolver.
 set(TREESEARCHSOLVER_BUILD_TEST OFF)
 set(TREESEARCHSOLVER_BUILD_EXAMPLES OFF)
@@ -53,25 +63,31 @@ set(LOCALSEARCHSOLVER_BUILD_TEST OFF)
 set(LOCALSEARCHSOLVER_BUILD_EXAMPLES OFF)
 FetchContent_Declare(
     localsearchsolver
-    GIT_REPOSITORY https://github.com/fontanf/localsearchsolver.git
-    GIT_TAG 7a35a7d3017324ebc0b74d5de8d4b001b19fcbed)
-    #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../localsearchsolver/")
+    #GIT_REPOSITORY https://github.com/fontanf/localsearchsolver.git
+    #GIT_TAG 7a35a7d3017324ebc0b74d5de8d4b001b19fcbed)
+    SOURCE_DIR "${PROJECT_SOURCE_DIR}/../localsearchsolver/")
 FetchContent_MakeAvailable(localsearchsolver)
 
+# Fetch fontanf/stablesolver.
+set(STABLESOLVER_BUILD_MAIN OFF)
+set(STABLESOLVER_BUILD_TEST OFF)
+set(STABLESOLVER_USE_CBC OFF)
+FetchContent_Declare(
+    stablesolver
+    GIT_REPOSITORY https://github.com/fontanf/stablesolver.git
+    GIT_TAG 673f47a1daa32d5eb33a09083bb15a87b7c2fb65
+    #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../stablesolver/"
+    EXCLUDE_FROM_ALL)
+FetchContent_MakeAvailable(stablesolver)
+
+set(SETCOVERINGSOLVER_BUILD_MAIN OFF)
+set(SETCOVERINGSOLVER_BUILD_TEST OFF)
 set(SETCOVERINGSOLVER_USE_CBC OFF)
 set(COLUMNGENERATIONSOLVER_USE_CLP OFF)
 FetchContent_Declare(
     setcoveringsolver
     GIT_REPOSITORY https://github.com/fontanf/setcoveringsolver.git
-    GIT_TAG cdcf22bd00676efbcbd51280d0870cc15ec0f5e7
+    GIT_TAG c7e7e658fdbb6c43c3218c4c11417e9afb7691ae
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../setcoveringsolver/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(setcoveringsolver)
-
-FetchContent_Declare(
-    knapsacksolver
-    GIT_REPOSITORY https://github.com/fontanf/knapsacksolver.git
-    GIT_TAG 2b2bead64fc7b84ab57c23d3f906e0526cfa71a0
-    #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../knapsacksolver/"
-    EXCLUDE_FROM_ALL)
-FetchContent_MakeAvailable(knapsacksolver)

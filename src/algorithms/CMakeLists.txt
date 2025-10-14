@@ -15,7 +15,7 @@ target_include_directories(KnapsackWithConflictsSolver_sequential_decomposition 
 target_link_libraries(KnapsackWithConflictsSolver_sequential_decomposition PUBLIC
     KnapsackWithConflictsSolver_knapsack_with_conflicts
     SetCoveringSolver_local_search_row_weighting
-    KnapsackSolver::knapsack::dynamic_programming_primal_dual)
+    KnapsackSolver::dynamic_programming_primal_dual)
 add_library(KnapsackWithConflictsSolver::sequential_decomposition ALIAS KnapsackWithConflictsSolver_sequential_decomposition)
 
 add_library(KnapsackWithConflictsSolver_greedy_best)
