@@ -24,7 +24,9 @@ Objective:
   - Sequential decomposition (maximum weight independent set then knapsack) `--algorithm sequential-decomposition --stable-weight-strategy 0`
   - Best greedy (greedy + sequential decomposition) `--algorithm greedy-best`
 
-- Mixed integer linear programming `--algorithm milp`
+- Mixed integer linear programming
+  - Model 1, $|E(G)$ constraints, `--algorithm milp`
+  - Model 2, $n$ constraints `--algorithm milp-2`
 
 ## Usage (command line)
 

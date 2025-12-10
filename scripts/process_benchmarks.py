@@ -14,7 +14,7 @@ st.title("KnapsackWithConflictsSolver benchmarks analyzer")
 def show_datafram(df):
     st.dataframe(
             df,
-            width="stretch",
+            width=True,
             height=(len(df.index) + 1) * 35 + 3)
 
 benchmarks = [

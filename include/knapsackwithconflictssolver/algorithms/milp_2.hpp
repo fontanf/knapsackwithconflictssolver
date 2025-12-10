@@ -7,7 +7,7 @@
 namespace knapsackwithconflictssolver
 {
 
-struct MilpParameters: Parameters
+struct Milp2Parameters: Parameters
 {
     /** MILP solver. */
     mathoptsolverscmake::SolverName solver = mathoptsolverscmake::SolverName::Highs;
@@ -30,9 +30,9 @@ struct MilpParameters: Parameters
     }
 };
 
-struct MilpOutput: Output
+struct Milp2Output: Output
 {
-    MilpOutput(
+    Milp2Output(
             const Instance& instance):
         Output(instance) { }
 
@@ -62,9 +62,9 @@ struct MilpOutput: Output
     }
 };
 
-MilpOutput milp(
+Milp2Output milp_2(
         const Instance& instance,
-        const MilpParameters& parameters = {});
+        const Milp2Parameters& parameters = {});
 
 void write_mps(
         const Instance& instance,

@@ -36,3 +36,13 @@ target_link_libraries(KnapsackWithConflictsSolver_milp PUBLIC
     KnapsackWithConflictsSolver_knapsack_with_conflicts
     MathOptSolversCMake::milp)
 add_library(KnapsackWithConflictsSolver::milp ALIAS KnapsackWithConflictsSolver_milp)
+
+add_library(KnapsackWithConflictsSolver_milp_2)
+target_sources(KnapsackWithConflictsSolver_milp_2 PRIVATE
+    milp_2.cpp)
+target_include_directories(KnapsackWithConflictsSolver_milp_2 PUBLIC
+    ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(KnapsackWithConflictsSolver_milp_2 PUBLIC
+    KnapsackWithConflictsSolver_knapsack_with_conflicts
+    MathOptSolversCMake::milp)
+add_library(KnapsackWithConflictsSolver::milp_2 ALIAS KnapsackWithConflictsSolver_milp_2)

@@ -5,6 +5,7 @@
 #include "knapsackwithconflictssolver/algorithms/sequential_decomposition.hpp"
 #include "knapsackwithconflictssolver/algorithms/greedy_best.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp.hpp"
+#include "knapsackwithconflictssolver/algorithms/milp_2.hpp"
 
 #ifdef XPRESS_FOUND
 #include "xprs.h"
@@ -100,6 +101,22 @@ Output run(
                 = vm["solver"].as<mathoptsolverscmake::SolverName>();
         }
         auto milp_output = milp(instance, parameters);
+#ifdef XPRESS_FOUND
+        XPRSfree();
+#endif
+        return milp_output;
+
+    } else if (algorithm == "milp-2") {
+#ifdef XPRESS_FOUND
+        XPRSinit(NULL);
+#endif
+        Milp2Parameters parameters;
+        read_args(parameters, vm);
+        if (vm.count("solver")) {
+            parameters.solver
+                = vm["solver"].as<mathoptsolverscmake::SolverName>();
+        }
+        auto milp_output = milp_2(instance, parameters);
 #ifdef XPRESS_FOUND
         XPRSfree();
 #endif

@@ -24,6 +24,7 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
         KnapsackWithConflictsSolver_sequential_decomposition
         KnapsackWithConflictsSolver_greedy_best
         KnapsackWithConflictsSolver_milp
+        KnapsackWithConflictsSolver_milp_2
         Boost::program_options)
     set_target_properties(KnapsackWithConflictsSolver_main PROPERTIES OUTPUT_NAME "knapsackwithconflictssolver")
     install(TARGETS KnapsackWithConflictsSolver_main)
@@ -34,6 +35,7 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
     target_link_libraries(KnapsackWithConflictsSolver_mps_writer_main PUBLIC
         KnapsackWithConflictsSolver_knapsack_with_conflicts
         KnapsackWithConflictsSolver_milp
+        KnapsackWithConflictsSolver_milp_2
         Boost::program_options
         Boost::filesystem)
     set_target_properties(KnapsackWithConflictsSolver_mps_writer_main PROPERTIES OUTPUT_NAME "knapsackwithconflictssolver_mps_writer")

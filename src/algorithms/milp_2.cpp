@@ -1,4 +1,4 @@
-#include "knapsackwithconflictssolver/algorithms/milp.hpp"
+#include "knapsackwithconflictssolver/algorithms/milp_2.hpp"
 
 #include "knapsackwithconflictssolver/algorithm_formatter.hpp"
 
@@ -10,14 +10,7 @@ namespace
 mathoptsolverscmake::MilpModel create_milp_model(
         const Instance& instance)
 {
-    int number_of_variables = instance.number_of_items();
-    int number_of_constraints = 1 + instance.number_of_conflicts();
-    int number_of_elements = instance.number_of_items() + 2 * instance.number_of_conflicts();
-
-    mathoptsolverscmake::MilpModel model(
-            number_of_variables,
-            number_of_constraints,
-            number_of_elements);
+    mathoptsolverscmake::MilpModel model;
 
     // Variable and objective.
     model.objective_direction = mathoptsolverscmake::ObjectiveDirection::Maximize;
@@ -25,50 +18,38 @@ mathoptsolverscmake::MilpModel create_milp_model(
             item_id < instance.number_of_items();
             ++item_id) {
         const Item& item = instance.item(item_id);
-        model.variables_lower_bounds[item_id] = 0;
-        model.variables_upper_bounds[item_id] = 1;
-        model.variables_types[item_id] = mathoptsolverscmake::VariableType::Binary;
-        model.objective_coefficients[item_id] = item.profit;
+        model.variables_lower_bounds.push_back(0);
+        model.variables_upper_bounds.push_back(1);
+        model.variables_types.push_back(mathoptsolverscmake::VariableType::Binary);
+        model.objective_coefficients.push_back(item.profit);
     }
 
-    // Constraints.
-    int element_id = 0;
-    int constraints_id = 0;
-
     // Constraint: knapsack constraint.
-    model.constraints_starts[constraints_id] = element_id;
+    model.constraints_starts.push_back(model.elements_variables.size());
     for (ItemId item_id = 0;
             item_id < instance.number_of_items();
             ++item_id) {
         const Item& item = instance.item(item_id);
-        model.elements_variables[element_id] = item_id;
-        model.elements_coefficients[element_id] = item.weight;
-        element_id++;
+        model.elements_variables.push_back(item_id);
+        model.elements_coefficients.push_back(item.weight);
     }
-    model.constraints_upper_bounds[constraints_id] = instance.capacity();
-    constraints_id++;
+    model.constraints_lower_bounds.push_back(-std::numeric_limits<double>::infinity());
+    model.constraints_upper_bounds.push_back(instance.capacity());
 
     // Constraints:conflict constraints.
     for (ItemId item_id = 0;
             item_id < instance.number_of_items();
             ++item_id) {
         const Item& item = instance.item(item_id);
+        model.constraints_starts.push_back(model.elements_variables.size());
+        model.elements_variables.push_back(item_id);
+        model.elements_coefficients.push_back(item.neighbors.size());
         for (const ItemConflict& conflict: item.neighbors) {
-            if (item_id > conflict.item_id)
-                continue;
-            model.constraints_starts[constraints_id] = element_id;
-
-            model.elements_variables[element_id] = item_id;
-            model.elements_coefficients[element_id] = 1.0;
-            element_id++;
-
-            model.elements_variables[element_id] = conflict.item_id;
-            model.elements_coefficients[element_id] = 1.0;
-            element_id++;
-
-            model.constraints_upper_bounds[constraints_id] = 1;
-            constraints_id++;
+            model.elements_variables.push_back(conflict.item_id);
+            model.elements_coefficients.push_back(1);
         }
+        model.constraints_lower_bounds.push_back(-std::numeric_limits<double>::infinity());
+        model.constraints_upper_bounds.push_back(item.neighbors.size());
     }
 
     return model;
@@ -104,8 +85,8 @@ public:
 
     EventHandler(
             const Instance& instance,
-            const MilpParameters& parameters,
-            MilpOutput& output,
+            const Milp2Parameters& parameters,
+            Milp2Output& output,
             AlgorithmFormatter& algorithm_formatter):
         CbcEventHandler(),
         instance_(instance),
@@ -127,8 +108,8 @@ public:
 private:
 
     const Instance& instance_;
-    const MilpParameters& parameters_;
-    MilpOutput& output_;
+    const Milp2Parameters& parameters_;
+    Milp2Output& output_;
     AlgorithmFormatter& algorithm_formatter_;
 
 };
@@ -170,8 +151,8 @@ CbcEventHandler::CbcAction EventHandler::event(CbcEvent which_event)
 struct XpressCallbackUser
 {
     const Instance& instance;
-    const MilpParameters& parameters;
-    MilpOutput& output;
+    const Milp2Parameters& parameters;
+    Milp2Output& output;
     AlgorithmFormatter& algorithm_formatter;
 };
 
@@ -207,13 +188,13 @@ void xpress_callback(
 
 }
 
-MilpOutput knapsackwithconflictssolver::milp(
+Milp2Output knapsackwithconflictssolver::milp_2(
         const Instance& instance,
-        const MilpParameters& parameters)
+        const Milp2Parameters& parameters)
 {
-    MilpOutput output(instance);
+    Milp2Output output(instance);
     AlgorithmFormatter algorithm_formatter(parameters, output);
-    algorithm_formatter.start("MILP");
+    algorithm_formatter.start("MILP 2");
 
     algorithm_formatter.print_header();
 
@@ -293,6 +274,9 @@ MilpOutput knapsackwithconflictssolver::milp(
         mathoptsolverscmake::load(xpress_model, milp_model);
         //mathoptsolverscmake::write_mps(xpress_model, "kpc.mps");
         XpressCallbackUser xpress_callback_user{instance, parameters, output, algorithm_formatter};
+        //XPRSsetintcontrol(xpress_model, XPRS_HEUREMPHASIS, 3);
+        //XPRSsetintcontrol(xpress_model, XPRS_HEURSEARCHROOTCUTFREQ, 1);
+        //XPRSsetdblcontrol(xpress_model, XPRS_HEURSEARCHEFFORT, 4);
         XPRSaddcbprenode(xpress_model, xpress_callback, (void*)&xpress_callback_user, 0);
         mathoptsolverscmake::solve(xpress_model);
         milp_solution = mathoptsolverscmake::get_solution(xpress_model);
@@ -315,47 +299,4 @@ MilpOutput knapsackwithconflictssolver::milp(
 
     algorithm_formatter.end();
     return output;
-}
-
-void knapsackwithconflictssolver::write_mps(
-        const Instance& instance,
-        mathoptsolverscmake::SolverName solver,
-        const std::string& output_path)
-{
-    mathoptsolverscmake::MilpModel milp_model = create_milp_model(instance);
-
-    if (solver == mathoptsolverscmake::SolverName::Cbc) {
-#ifdef CBC_FOUND
-        OsiCbcSolverInterface osi_solver;
-        CbcModel cbc_model(osi_solver);
-        mathoptsolverscmake::load(cbc_model, milp_model);
-        cbc_model.solver()->writeMps(output_path.c_str());
-#else
-        throw std::invalid_argument("");
-#endif
-
-    } else if (solver == mathoptsolverscmake::SolverName::Highs) {
-#ifdef HIGHS_FOUND
-        Highs highs;
-        mathoptsolverscmake::load(highs, milp_model);
-        highs.writeModel(output_path);
-#else
-        throw std::invalid_argument("");
-#endif
-
-    } else if (solver == mathoptsolverscmake::SolverName::Xpress) {
-#ifdef XPRESS_FOUND
-        XPRSprob xpress_model;
-        XPRScreateprob(&xpress_model);
-        mathoptsolverscmake::load(xpress_model, milp_model);
-        mathoptsolverscmake::write_mps(xpress_model, "kpc.mps");
-        XPRSdestroyprob(xpress_model);
-#else
-        throw std::invalid_argument("");
-#endif
-
-    } else {
-        throw std::invalid_argument("");
-    }
-
 }
