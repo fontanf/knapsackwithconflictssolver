@@ -4,6 +4,7 @@ target_sources(KnapsackWithConflictsSolver_knapsack_with_conflicts PRIVATE
     instance.cpp
     instance_builder.cpp
     solution.cpp
+    utils.cpp
     algorithm_formatter.cpp)
 target_include_directories(KnapsackWithConflictsSolver_knapsack_with_conflicts PUBLIC
     ${PROJECT_SOURCE_DIR}/include)
@@ -23,6 +24,7 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
         KnapsackWithConflictsSolver_greedy
         KnapsackWithConflictsSolver_sequential_decomposition
         KnapsackWithConflictsSolver_greedy_best
+        KnapsackWithConflictsSolver_bounds
         KnapsackWithConflictsSolver_milp
         KnapsackWithConflictsSolver_milp_2
         Boost::program_options)

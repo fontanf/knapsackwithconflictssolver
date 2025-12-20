@@ -27,6 +27,18 @@ target_link_libraries(KnapsackWithConflictsSolver_greedy_best PUBLIC
     KnapsackWithConflictsSolver_knapsack_with_conflicts)
 add_library(KnapsackWithConflictsSolver::greedy_best ALIAS KnapsackWithConflictsSolver_greedy_best)
 
+add_library(KnapsackWithConflictsSolver_bounds)
+target_sources(KnapsackWithConflictsSolver_bounds PRIVATE
+    bounds.cpp)
+target_include_directories(KnapsackWithConflictsSolver_bounds PUBLIC
+    ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(KnapsackWithConflictsSolver_bounds PUBLIC
+    KnapsackWithConflictsSolver_knapsack_with_conflicts
+    KnapsackSolver::dynamic_programming_primal_dual
+    MultipleChoiceKnapsackSolver::milp
+    MultipleChoiceKnapsackSolver::dynamic_programming_bellman)
+add_library(KnapsackWithConflictsSolver::bounds ALIAS KnapsackWithConflictsSolver_bounds)
+
 add_library(KnapsackWithConflictsSolver_milp)
 target_sources(KnapsackWithConflictsSolver_milp PRIVATE
     milp.cpp)

@@ -1,7 +1,5 @@
 #include "knapsackwithconflictssolver/algorithms/greedy.hpp"
 
-#include "knapsackwithconflictssolver/algorithm_formatter.hpp"
-
 using namespace knapsackwithconflictssolver;
 
 Output knapsackwithconflictssolver::greedy(

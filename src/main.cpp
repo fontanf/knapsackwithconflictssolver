@@ -4,6 +4,7 @@
 #include "knapsackwithconflictssolver/algorithms/greedy.hpp"
 #include "knapsackwithconflictssolver/algorithms/sequential_decomposition.hpp"
 #include "knapsackwithconflictssolver/algorithms/greedy_best.hpp"
+#include "knapsackwithconflictssolver/algorithms/bounds.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp_2.hpp"
 
@@ -89,6 +90,23 @@ Output run(
         Parameters parameters;
         read_args(parameters, vm);
         return greedy_best(instance, parameters);
+
+    } else if (algorithm == "fractional-knapsack-bound") {
+        Parameters parameters;
+        read_args(parameters, vm);
+        return fractional_knapsack_bound(instance, parameters);
+    } else if (algorithm == "binary-knapsack-bound") {
+        Parameters parameters;
+        read_args(parameters, vm);
+        return binary_knapsack_bound(instance, parameters);
+    } else if (algorithm == "fractional-multiple-choice-knapsack-bound") {
+        Parameters parameters;
+        read_args(parameters, vm);
+        return fractional_multiple_choice_knapsack_bound(instance, parameters);
+    } else if (algorithm == "binary-multiple-choice-knapsack-bound") {
+        Parameters parameters;
+        read_args(parameters, vm);
+        return binary_multiple_choice_knapsack_bound(instance, parameters);
 
     } else if (algorithm == "milp") {
 #ifdef XPRESS_FOUND

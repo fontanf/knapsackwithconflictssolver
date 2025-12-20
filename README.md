@@ -24,6 +24,12 @@ Objective:
   - Sequential decomposition (maximum weight independent set then knapsack) `--algorithm sequential-decomposition --stable-weight-strategy 0`
   - Best greedy (greedy + sequential decomposition) `--algorithm greedy-best`
 
+- Simple bounds
+  - Fractional knapsack relaxation `--algorithm fractional-knapsack-bound`
+  - Integer knapsack relaxation `--algorithm binary-knapsack-bound`
+  - Fractional multiple-choice knapsack relaxation `--algorithm fractional-multiple-choice-knapsack-bound`
+  - Integer multiple-choice knapsack relaxation `--algorithm binary-multiple-choice-knapsack-bound`
+
 - Mixed integer linear programming
   - Model 1, $|E(G)$ constraints, `--algorithm milp`
   - Model 2, $n$ constraints `--algorithm milp-2`
