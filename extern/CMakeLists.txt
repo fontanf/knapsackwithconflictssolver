@@ -40,29 +40,6 @@ FetchContent_Declare(
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(mathoptsolverscmake)
 
-set(KNAPSACKSOLVER_BUILD_MAIN OFF)
-set(KNAPSACKSOLVER_BUILD_TEST OFF)
-FetchContent_Declare(
-    knapsacksolver
-    GIT_REPOSITORY https://github.com/fontanf/knapsacksolver.git
-    GIT_TAG 1d7a689f88e953c099087a31f174cb6646002f9f
-    #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../knapsacksolver/"
-    EXCLUDE_FROM_ALL)
-FetchContent_MakeAvailable(knapsacksolver)
-
-set(MULTIPLECHOICEKNAPSACKSOLVER_BUILD_MAIN OFF)
-set(MULTIPLECHOICEKNAPSACKSOLVER_BUILD_TEST OFF)
-if(KNAPSACKWITHCONFLICTSSOLVER_USE_HIGHS)
-    set(MULTIPLECHOICEKNAPSACKSOLVER_USE_HIGHS ON)
-endif()
-FetchContent_Declare(
-    multiplechoiceknapsacksolver
-    GIT_REPOSITORY https://github.com/fontanf/multiplechoiceknapsacksolver.git
-    GIT_TAG 98cddecafa6c2af03481747b885a053eb42f534b
-    #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../multiplechoiceknapsacksolver/"
-    EXCLUDE_FROM_ALL)
-FetchContent_MakeAvailable(multiplechoiceknapsacksolver)
-
 # Fetch fontanf/treesearchsolver.
 set(TREESEARCHSOLVER_BUILD_TEST OFF)
 set(TREESEARCHSOLVER_BUILD_EXAMPLES OFF)
@@ -102,6 +79,31 @@ FetchContent_Declare(
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../columngenerationsolver/")
 FetchContent_MakeAvailable(columngenerationsolver)
 
+# Fetch fontanf/knapsacksolver.
+set(KNAPSACKSOLVER_BUILD_MAIN OFF)
+set(KNAPSACKSOLVER_BUILD_TEST OFF)
+FetchContent_Declare(
+    knapsacksolver
+    GIT_REPOSITORY https://github.com/fontanf/knapsacksolver.git
+    GIT_TAG 1d7a689f88e953c099087a31f174cb6646002f9f
+    #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../knapsacksolver/"
+    EXCLUDE_FROM_ALL)
+FetchContent_MakeAvailable(knapsacksolver)
+
+# Fetch fontanf/multiplechoiceknapsacksolver.
+set(MULTIPLECHOICEKNAPSACKSOLVER_BUILD_MAIN OFF)
+set(MULTIPLECHOICEKNAPSACKSOLVER_BUILD_TEST OFF)
+if(KNAPSACKWITHCONFLICTSSOLVER_USE_HIGHS)
+    set(MULTIPLECHOICEKNAPSACKSOLVER_USE_HIGHS ON)
+endif()
+FetchContent_Declare(
+    multiplechoiceknapsacksolver
+    GIT_REPOSITORY https://github.com/fontanf/multiplechoiceknapsacksolver.git
+    GIT_TAG 98cddecafa6c2af03481747b885a053eb42f534b
+    #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../multiplechoiceknapsacksolver/"
+    EXCLUDE_FROM_ALL)
+FetchContent_MakeAvailable(multiplechoiceknapsacksolver)
+
 # Fetch fontanf/stablesolver.
 set(STABLESOLVER_BUILD_MAIN OFF)
 set(STABLESOLVER_BUILD_TEST OFF)
@@ -111,7 +113,7 @@ endif()
 FetchContent_Declare(
     stablesolver
     GIT_REPOSITORY https://github.com/fontanf/stablesolver.git
-    GIT_TAG 673f47a1daa32d5eb33a09083bb15a87b7c2fb65
+    GIT_TAG ba86b3fc199288f8182012ea49832d98de3a0ea9
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../stablesolver/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(stablesolver)
@@ -127,7 +129,7 @@ endif()
 FetchContent_Declare(
     setcoveringsolver
     GIT_REPOSITORY https://github.com/fontanf/setcoveringsolver.git
-    GIT_TAG c7e7e658fdbb6c43c3218c4c11417e9afb7691ae
+    GIT_TAG 4d9190edcb2266ab6e54d7e6b0334fed30906524
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../setcoveringsolver/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(setcoveringsolver)
