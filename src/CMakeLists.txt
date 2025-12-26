@@ -27,6 +27,7 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
         KnapsackWithConflictsSolver_bounds
         KnapsackWithConflictsSolver_milp
         KnapsackWithConflictsSolver_milp_2
+        KnapsackWithConflictsSolver_milp_3
         Boost::program_options)
     set_target_properties(KnapsackWithConflictsSolver_main PROPERTIES OUTPUT_NAME "knapsackwithconflictssolver")
     install(TARGETS KnapsackWithConflictsSolver_main)
@@ -38,6 +39,7 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
         KnapsackWithConflictsSolver_knapsack_with_conflicts
         KnapsackWithConflictsSolver_milp
         KnapsackWithConflictsSolver_milp_2
+        KnapsackWithConflictsSolver_milp_3
         Boost::program_options
         Boost::filesystem)
     set_target_properties(KnapsackWithConflictsSolver_mps_writer_main PROPERTIES OUTPUT_NAME "knapsackwithconflictssolver_mps_writer")

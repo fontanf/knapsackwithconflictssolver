@@ -7,6 +7,7 @@
 #include "knapsackwithconflictssolver/algorithms/bounds.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp_2.hpp"
+#include "knapsackwithconflictssolver/algorithms/milp_3.hpp"
 
 #ifdef XPRESS_FOUND
 #include "xprs.h"
@@ -161,6 +162,33 @@ Output run(
         XPRSfree();
 #endif
         return milp_2_linear_reaxation_output;
+
+    } else if (algorithm == "milp-3") {
+#ifdef XPRESS_FOUND
+        XPRSinit(NULL);
+#endif
+        Milp3Parameters parameters;
+        read_args(parameters, vm);
+        if (vm.count("solver")) {
+            parameters.solver
+                = vm["solver"].as<mathoptsolverscmake::SolverName>();
+        }
+        auto milp_output = milp_3(instance, parameters);
+#ifdef XPRESS_FOUND
+        XPRSfree();
+#endif
+        return milp_output;
+    } else if (algorithm == "milp-3-linear-relaxation") {
+#ifdef XPRESS_FOUND
+        XPRSinit(NULL);
+#endif
+        Milp3Parameters parameters;
+        read_args(parameters, vm);
+        auto milp_3_linear_reaxation_output = milp_3_linear_relaxation(instance, parameters);
+#ifdef XPRESS_FOUND
+        XPRSfree();
+#endif
+        return milp_3_linear_reaxation_output;
 
     } else {
         throw std::invalid_argument(

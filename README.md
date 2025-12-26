@@ -35,6 +35,8 @@ Objective:
     - Linear relaxation `--algorithm milp-linear-relaxation`
   - Model 2, $n$ constraints `--algorithm milp-2`
     - Linear relaxation `--algorithm milp-2-linear-relaxation`
+  - Model 3, clique constraints `--algorithm milp-3`
+    - Linear relaxation `--algorithm milp-3-linear-relaxation`
 
 ## Usage (command line)
 

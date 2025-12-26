@@ -1,5 +1,7 @@
 #include "knapsackwithconflictssolver/instance_builder.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp.hpp"
+#include "knapsackwithconflictssolver/algorithms/milp_2.hpp"
+#include "knapsackwithconflictssolver/algorithms/milp_3.hpp"
 
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
@@ -18,6 +20,7 @@ int main(int argc, char *argv[])
         ("input,i", po::value<std::string>()->required(), "set input path")
         ("format,f", po::value<std::string>()->required(), "set input format")
         ("solver,", po::value<mathoptsolverscmake::SolverName>()->required(), "set solver")
+        ("model,", po::value<std::string>()->required(), "set model")
         ("output,o", po::value<std::string>()->required(), "set output path")
         ;
     po::variables_map vm;
@@ -40,10 +43,23 @@ int main(int argc, char *argv[])
             vm["format"].as<std::string>());
     Instance instance = instance_builder.build();
 
-    write_mps(
-            instance,
-            vm["solver"].as<mathoptsolverscmake::SolverName>(),
-            vm["output"].as<std::string>());
+    std::string model = vm["model"].as<std::string>();
+    if (model == "milp") {
+        write_mps(
+                instance,
+                vm["solver"].as<mathoptsolverscmake::SolverName>(),
+                vm["output"].as<std::string>());
+    } else if (model == "milp-2") {
+        //write_mps_2(
+        //        instance,
+        //        vm["solver"].as<mathoptsolverscmake::SolverName>(),
+        //        vm["output"].as<std::string>());
+    } else if (model == "milp-3") {
+        //write_mps_3(
+        //        instance,
+        //        vm["solver"].as<mathoptsolverscmake::SolverName>(),
+        //        vm["output"].as<std::string>());
+    }
 
     return 0;
 }
