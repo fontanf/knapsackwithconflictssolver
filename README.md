@@ -31,8 +31,10 @@ Objective:
   - Integer multiple-choice knapsack relaxation `--algorithm binary-multiple-choice-knapsack-bound`
 
 - Mixed integer linear programming
-  - Model 1, $|E(G)$ constraints, `--algorithm milp`
+  - Model 1, $|E(G)|$ constraints, `--algorithm milp`
+    - Linear relaxation `--algorithm milp-linear-relaxation`
   - Model 2, $n$ constraints `--algorithm milp-2`
+    - Linear relaxation `--algorithm milp-2-linear-relaxation`
 
 ## Usage (command line)
 

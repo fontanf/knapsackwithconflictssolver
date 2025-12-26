@@ -123,6 +123,17 @@ Output run(
         XPRSfree();
 #endif
         return milp_output;
+    } else if (algorithm == "milp-linear-relaxation") {
+#ifdef XPRESS_FOUND
+        XPRSinit(NULL);
+#endif
+        MilpParameters parameters;
+        read_args(parameters, vm);
+        auto milp_linear_reaxation_output = milp_linear_relaxation(instance, parameters);
+#ifdef XPRESS_FOUND
+        XPRSfree();
+#endif
+        return milp_linear_reaxation_output;
 
     } else if (algorithm == "milp-2") {
 #ifdef XPRESS_FOUND
@@ -139,6 +150,17 @@ Output run(
         XPRSfree();
 #endif
         return milp_output;
+    } else if (algorithm == "milp-2-linear-relaxation") {
+#ifdef XPRESS_FOUND
+        XPRSinit(NULL);
+#endif
+        Milp2Parameters parameters;
+        read_args(parameters, vm);
+        auto milp_2_linear_reaxation_output = milp_2_linear_relaxation(instance, parameters);
+#ifdef XPRESS_FOUND
+        XPRSfree();
+#endif
+        return milp_2_linear_reaxation_output;
 
     } else {
         throw std::invalid_argument(

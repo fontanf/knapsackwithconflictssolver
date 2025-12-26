@@ -2,6 +2,8 @@
 
 #include "knapsackwithconflictssolver/algorithm_formatter.hpp"
 
+#include "mathoptsolverscmake/milp.hpp"
+
 using namespace knapsackwithconflictssolver;
 
 namespace
@@ -312,6 +314,48 @@ MilpOutput knapsackwithconflictssolver::milp(
 
     // Retrieve bound.
     algorithm_formatter.update_bound(std::ceil(milp_bound - 1e-7), "");
+
+    algorithm_formatter.end();
+    return output;
+}
+
+MilpLinearRelaxationOutput knapsackwithconflictssolver::milp_linear_relaxation(
+        const Instance& instance,
+        const MilpParameters& parameters)
+{
+    MilpLinearRelaxationOutput output(instance);
+    AlgorithmFormatter algorithm_formatter(parameters, output);
+    algorithm_formatter.start("MILP - linear relaxation");
+
+    algorithm_formatter.print_header();
+
+    mathoptsolverscmake::MilpModel milp_model = create_milp_model(instance);
+    for (int variable_id = 0;
+            variable_id < milp_model.number_of_variables();
+            ++variable_id) {
+        milp_model.variables_types[variable_id] = mathoptsolverscmake::VariableType::Continuous;
+    }
+
+    if (parameters.solver == mathoptsolverscmake::SolverName::Highs) {
+#ifdef HIGHS_FOUND
+        Highs highs;
+        mathoptsolverscmake::reduce_printout(highs);
+        mathoptsolverscmake::set_time_limit(highs, parameters.timer.remaining_time());
+        mathoptsolverscmake::set_log_file(highs, "highs.log");
+        mathoptsolverscmake::load(highs, milp_model);
+        mathoptsolverscmake::solve(highs);
+        output.relaxation_solution = mathoptsolverscmake::get_solution(highs);
+#else
+        throw std::invalid_argument("");
+#endif
+
+    } else {
+        throw std::invalid_argument("");
+    }
+
+    // Retrieve bound.
+    Profit bound = std::floor(milp_model.evaluate_objective(output.relaxation_solution) + 1e-5);
+    algorithm_formatter.update_bound(bound, "");
 
     algorithm_formatter.end();
     return output;

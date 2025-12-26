@@ -2,7 +2,7 @@
 
 #include "knapsackwithconflictssolver/algorithm_formatter.hpp"
 
-#include "mathoptsolverscmake/milp.hpp"
+#include "mathoptsolverscmake/common.hpp"
 
 namespace knapsackwithconflictssolver
 {
@@ -66,7 +66,24 @@ Milp2Output milp_2(
         const Instance& instance,
         const Milp2Parameters& parameters = {});
 
-void write_mps(
+
+struct Milp2LinearRelaxationOutput: Output
+{
+    Milp2LinearRelaxationOutput(
+            const Instance& instance):
+        Output(instance) { }
+
+
+    /** Solution of the linear relaxation. */
+    std::vector<double> relaxation_solution;
+};
+
+Milp2LinearRelaxationOutput milp_2_linear_relaxation(
+        const Instance& instance,
+        const Milp2Parameters& parameters = {});
+
+
+void write_mps_2(
         const Instance& instance,
         mathoptsolverscmake::SolverName solver,
         const std::string& output_path);
