@@ -38,6 +38,8 @@ Objective:
   - Model 3, clique constraints `--algorithm milp-3`
     - Linear relaxation `--algorithm milp-3-linear-relaxation`
 
+- Lagrangian relaxation `--algorithm lagrangian-relaxation --solver dlib`
+
 ## Usage (command line)
 
 Compile:

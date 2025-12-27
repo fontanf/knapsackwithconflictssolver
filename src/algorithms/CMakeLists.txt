@@ -69,3 +69,14 @@ target_link_libraries(KnapsackWithConflictsSolver_milp_3 PUBLIC
     OptimizationTools::graph
     MathOptSolversCMake::milp)
 add_library(KnapsackWithConflictsSolver::milp_3 ALIAS KnapsackWithConflictsSolver_milp_3)
+
+add_library(KnapsackWithConflictsSolver_lagrangian_relaxation)
+target_sources(KnapsackWithConflictsSolver_lagrangian_relaxation PRIVATE
+    lagrangian_relaxation.cpp)
+target_include_directories(KnapsackWithConflictsSolver_lagrangian_relaxation PUBLIC
+    ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(KnapsackWithConflictsSolver_lagrangian_relaxation PUBLIC
+    KnapsackWithConflictsSolver_knapsack_with_conflicts
+    OptimizationTools::graph
+    MathOptSolversCMake::box_constrained_nlp)
+add_library(KnapsackWithConflictsSolver::lagrangian_relaxation ALIAS KnapsackWithConflictsSolver_lagrangian_relaxation)

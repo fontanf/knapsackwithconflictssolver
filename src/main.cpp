@@ -8,6 +8,7 @@
 #include "knapsackwithconflictssolver/algorithms/milp.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp_2.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp_3.hpp"
+#include "knapsackwithconflictssolver/algorithms/lagrangian_relaxation.hpp"
 
 #ifdef XPRESS_FOUND
 #include "xprs.h"
@@ -189,6 +190,11 @@ Output run(
         XPRSfree();
 #endif
         return milp_3_linear_reaxation_output;
+
+    } else if (algorithm == "lagrangian-relaxation") {
+        LagrangianRelaxationParameters parameters;
+        read_args(parameters, vm);
+        return lagrangian_relaxation(instance, nullptr, parameters);
 
     } else {
         throw std::invalid_argument(
