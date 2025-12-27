@@ -19,9 +19,9 @@ mathoptsolverscmake::MilpModel create_milp_model(
             item_id < instance.number_of_items();
             ++item_id) {
         const Item& item = instance.item(item_id);
-        Weight weight = (double)item.profit / item.weight;
-        //Weight weight = (double)item.profit;
-        //Weight weight = 1;
+        optimizationtools::Weight weight = (double)item.profit / item.weight;
+        //optimizationtools::Weight weight = (double)item.profit;
+        //optimizationtools::Weight weight = 1;
         graph_builder.add_vertex(weight);
     }
     for (ConflictId conflict_id = 0;
