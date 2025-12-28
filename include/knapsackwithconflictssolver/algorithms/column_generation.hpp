@@ -25,11 +25,18 @@ struct ColumnGenerationOutput: Output
 {
     ColumnGenerationOutput(
             const Instance& instance):
-        Output(instance) { }
+        Output(instance),
+        x(instance.number_of_items(), 0) { }
 
 
-    /** Conflicts. */
-    std::vector<std::vector<ItemId>> conflicts;;
+    /** Cliques. */
+    std::vector<std::vector<ItemId>> cliques;
+
+    /** Vector of size `instance.number_of_items()`. */
+    std::vector<double> x;
+
+    /** Columns. */
+    std::vector<std::vector<std::pair<ItemId, double>>> columns;
 
 
     virtual int format_width() const override { return 31; }
@@ -39,7 +46,7 @@ struct ColumnGenerationOutput: Output
         Output::format(os);
         int width = format_width();
         os
-            << std::setw(width) << std::left << "Number of conflicts: " << this->conflicts.size() << std::endl
+            << std::setw(width) << std::left << "Number of cliques: " << this->cliques.size() << std::endl
             ;
     }
 
@@ -47,7 +54,7 @@ struct ColumnGenerationOutput: Output
     {
         nlohmann::json json = Output::to_json();
         json.merge_patch({
-                {"NumberOfConflicts", this->conflicts.size()},
+                {"NumberOfCliques", this->cliques.size()},
                 });
         return json;
     }

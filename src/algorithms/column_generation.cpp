@@ -319,18 +319,7 @@ ColumnGenerationOutput knapsackwithconflictssolver::column_generation(
     algorithm_formatter.start("Column generation");
     algorithm_formatter.print_header();
 
-    // Compute initial x.
-    columngenerationsolver::Model model = get_model(instance, {});
-    auto pricing_output = model.pricing_solver->solve_pricing({0});
-    std::vector<double> x(instance.number_of_items(), 0);
-    std::shared_ptr<ColumnExtra> extra
-        = std::static_pointer_cast<ColumnExtra>(pricing_output.columns[0]->extra);
-    for (const auto& p: extra->items)
-        x[p.first] += p.second;
-
-    std::vector<std::vector<std::pair<ItemId, double>>> last_optimal_columns;
-
-    for (;;) {
+    for (Counter iteration = 0;; ++iteration) {
         // Choose conflicts.
 
         if (parameters.conflicts_strategy == 0) {
@@ -338,7 +327,7 @@ ColumnGenerationOutput knapsackwithconflictssolver::column_generation(
                     conflict_id < instance.number_of_conflicts();
                     ++conflict_id) {
                 const Conflict& conflict = instance.conflict(conflict_id);
-                output.conflicts.push_back({conflict.item_1_id, conflict.item_2_id});
+                output.cliques.push_back({conflict.item_1_id, conflict.item_2_id});
             }
 
         } else if (parameters.conflicts_strategy == 1) {
@@ -359,37 +348,47 @@ ColumnGenerationOutput knapsackwithconflictssolver::column_generation(
                         conflict.item_2_id);
             }
             optimizationtools::AdjacencyListGraph graph = graph_builder.build();
-            //output.conflicts = optimizationtools::edge_clique_cover(graph);
-            output.conflicts = optimizationtools::edge_clique_partition(graph);
+            //output.cliques = optimizationtools::edge_clique_cover(graph);
+            output.cliques = optimizationtools::edge_clique_partition(graph);
 
         } else if (parameters.conflicts_strategy == 2) {
+            // Compute initial x.
+            if (iteration == 0) {
+                columngenerationsolver::Model model = get_model(instance, output.cliques);
+                auto pricing_output = model.pricing_solver->solve_pricing({0});
+                std::shared_ptr<ColumnExtra> extra
+                    = std::static_pointer_cast<ColumnExtra>(pricing_output.columns[0]->extra);
+                for (const auto& p: extra->items)
+                    output.x[p.first] += p.second;
+            }
+
             // Add violated conflicts.
-            std::vector<std::vector<ItemId>> new_conflicts = find_violated_cliques(
+            std::vector<std::vector<ItemId>> new_cliques = find_violated_cliques(
                     instance,
-                    x);
-            if (new_conflicts.empty()) {
+                    output.x);
+            if (new_cliques.empty()) {
                 std::cout << "No violated cliques found." << std::endl;
                 break;
             }
 
             // Remove inactive conflicts.
-            for (ConflictId conflict_id = 0;
-                    conflict_id < (ConflictId)output.conflicts.size();
-                    ++conflict_id) {
+            for (ConflictId clique_id = 0;
+                    clique_id < (ConflictId)output.cliques.size();
+                    ++clique_id) {
                 double value = 0;
-                const std::vector<ItemId>& conflict = output.conflicts[conflict_id];
-                for (ItemId item_id: conflict)
-                    value += x[item_id];
+                const std::vector<ItemId>& clique = output.cliques[clique_id];
+                for (ItemId item_id: clique)
+                    value += output.x[item_id];
                 if (value <= 0.99)
                     continue;
-                new_conflicts.push_back(conflict);
+                new_cliques.push_back(clique);
             }
 
-            output.conflicts = new_conflicts;
+            output.cliques = new_cliques;
         }
 
         // Column generation.
-        columngenerationsolver::Model model = get_model(instance, output.conflicts);
+        columngenerationsolver::Model model = get_model(instance, output.cliques);
         columngenerationsolver::ColumnGenerationParameters cgs_parameters;
         cgs_parameters.verbosity_level = 0;
         cgs_parameters.timer = parameters.timer;
@@ -398,7 +397,7 @@ ColumnGenerationOutput knapsackwithconflictssolver::column_generation(
         cgs_parameters.solver_name = parameters.linear_programming_solver;
         // Give last optimal solution as initial columns instead of restarting
         // the column generation from scratch.
-        for (const std::vector<std::pair<ItemId, double>>& items: last_optimal_columns) {
+        for (const std::vector<std::pair<ItemId, double>>& items: output.columns) {
             Column column = static_cast<const PricingSolver&>(*model.pricing_solver).solution_to_column(items);
             cgs_parameters.initial_columns.push_back(std::shared_ptr<const columngenerationsolver::Column>(new columngenerationsolver::Column(column)));
         }
@@ -423,22 +422,22 @@ ColumnGenerationOutput knapsackwithconflictssolver::column_generation(
         if (cgs_output.bound != std::numeric_limits<double>::infinity())
             algorithm_formatter.update_bound(cgs_output.bound, "");
 
+        // Update x and columns.
+        output.columns.clear();
+        std::fill(output.x.begin(), output.x.end(), 0);
+        for (const auto& colval: cgs_output.relaxation_solution.columns()) {
+            std::shared_ptr<ColumnExtra> extra
+                = std::static_pointer_cast<ColumnExtra>(colval.first->extra);
+            output.columns.push_back(extra->items);
+            for (const auto& p: extra->items)
+                output.x[p.first] += p.second * colval.second;
+        }
+
         if (parameters.timer.needs_to_end())
             break;
 
         if (parameters.conflicts_strategy != 2)
             break;
-
-        // Update x.
-        last_optimal_columns.clear();
-        std::fill(x.begin(), x.end(), 0);
-        for (const auto& colval: cgs_output.relaxation_solution.columns()) {
-            std::shared_ptr<ColumnExtra> extra
-                = std::static_pointer_cast<ColumnExtra>(colval.first->extra);
-            last_optimal_columns.push_back(extra->items);
-            for (const auto& p: extra->items)
-                x[p.first] += p.second * colval.second;
-        }
     }
 
     algorithm_formatter.end();
