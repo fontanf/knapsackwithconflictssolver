@@ -9,6 +9,7 @@
 #include "knapsackwithconflictssolver/algorithms/milp_2.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp_3.hpp"
 #include "knapsackwithconflictssolver/algorithms/lagrangian_relaxation.hpp"
+#include "knapsackwithconflictssolver/algorithms/column_generation.hpp"
 
 #ifdef XPRESS_FOUND
 #include "xprs.h"
@@ -195,6 +196,11 @@ Output run(
         LagrangianRelaxationParameters parameters;
         read_args(parameters, vm);
         return lagrangian_relaxation(instance, nullptr, parameters);
+
+    } else if (algorithm == "column-generation") {
+        ColumnGenerationParameters parameters;
+        read_args(parameters, vm);
+        return column_generation(instance, parameters);
 
     } else {
         throw std::invalid_argument(

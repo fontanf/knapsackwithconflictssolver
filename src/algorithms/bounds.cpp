@@ -2,6 +2,8 @@
 
 #include "knapsackwithconflictssolver/utils.hpp"
 
+#include "optimizationtools/graph/clique.hpp"
+
 #include "knapsacksolver/instance_builder.hpp"
 #include "knapsacksolver/algorithms/dynamic_programming_primal_dual.hpp"
 
@@ -83,7 +85,27 @@ Output knapsackwithconflictssolver::fractional_multiple_choice_knapsack_bound(
     algorithm_formatter.start("Fractional multiple-choice knapasck bound");
     algorithm_formatter.print_header();
 
-    std::vector<std::vector<ItemId>> clique_partition = compute_clique_partition(instance);
+    std::vector<ItemId> sorted_items = compute_sorted_items(instance);
+    std::vector<optimizationtools::VertexId> item_to_vertex(instance.number_of_items());
+    optimizationtools::AdjacencyListGraphBuilder graph_builder;
+    for (ItemId item_pos = 0;
+            item_pos < instance.number_of_items();
+            ++item_pos) {
+        ItemId item_id = sorted_items[item_pos];
+        const Item& item = instance.item(item_id);
+        item_to_vertex[item_id] = item_pos;
+        graph_builder.add_vertex((double)item.profit / item.weight);
+    }
+    for (ConflictId conflict_id = 0;
+            conflict_id < instance.number_of_conflicts();
+            ++conflict_id) {
+        const Conflict& conflict = instance.conflict(conflict_id);
+        graph_builder.add_edge(
+                item_to_vertex[conflict.item_1_id],
+                item_to_vertex[conflict.item_2_id]);
+    }
+    optimizationtools::AdjacencyListGraph graph = graph_builder.build();
+    std::vector<std::vector<ItemId>> clique_partition = optimizationtools::vertex_clique_partition_1(graph);
 
     // Build knapsack instance.
     multiplechoiceknapsacksolver::InstanceBuilder mckp_instance_builder;
@@ -124,7 +146,27 @@ Output knapsackwithconflictssolver::binary_multiple_choice_knapsack_bound(
     algorithm_formatter.start("Binary multiple-choice knapsack bound");
     algorithm_formatter.print_header();
 
-    std::vector<std::vector<ItemId>> clique_partition = compute_clique_partition(instance);
+    std::vector<ItemId> sorted_items = compute_sorted_items(instance);
+    std::vector<optimizationtools::VertexId> item_to_vertex(instance.number_of_items());
+    optimizationtools::AdjacencyListGraphBuilder graph_builder;
+    for (ItemId item_pos = 0;
+            item_pos < instance.number_of_items();
+            ++item_pos) {
+        ItemId item_id = sorted_items[item_pos];
+        const Item& item = instance.item(item_id);
+        item_to_vertex[item_id] = item_pos;
+        graph_builder.add_vertex((double)item.profit / item.weight);
+    }
+    for (ConflictId conflict_id = 0;
+            conflict_id < instance.number_of_conflicts();
+            ++conflict_id) {
+        const Conflict& conflict = instance.conflict(conflict_id);
+        graph_builder.add_edge(
+                item_to_vertex[conflict.item_1_id],
+                item_to_vertex[conflict.item_2_id]);
+    }
+    optimizationtools::AdjacencyListGraph graph = graph_builder.build();
+    std::vector<std::vector<ItemId>> clique_partition = optimizationtools::vertex_clique_partition_1(graph);
 
     // Build knapsack instance.
     multiplechoiceknapsacksolver::InstanceBuilder mckp_instance_builder;

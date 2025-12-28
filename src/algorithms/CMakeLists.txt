@@ -33,6 +33,7 @@ target_sources(KnapsackWithConflictsSolver_bounds PRIVATE
 target_include_directories(KnapsackWithConflictsSolver_bounds PUBLIC
     ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(KnapsackWithConflictsSolver_bounds PUBLIC
+    OptimizationTools::graph
     KnapsackWithConflictsSolver_knapsack_with_conflicts
     KnapsackSolver::dynamic_programming_primal_dual
     MultipleChoiceKnapsackSolver::milp
@@ -80,3 +81,15 @@ target_link_libraries(KnapsackWithConflictsSolver_lagrangian_relaxation PUBLIC
     OptimizationTools::graph
     MathOptSolversCMake::box_constrained_nlp)
 add_library(KnapsackWithConflictsSolver::lagrangian_relaxation ALIAS KnapsackWithConflictsSolver_lagrangian_relaxation)
+
+add_library(KnapsackWithConflictsSolver_column_generation)
+target_sources(KnapsackWithConflictsSolver_column_generation PRIVATE
+    column_generation.cpp)
+target_include_directories(KnapsackWithConflictsSolver_column_generation PUBLIC
+    ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(KnapsackWithConflictsSolver_column_generation PUBLIC
+    KnapsackWithConflictsSolver_knapsack_with_conflicts
+    ColumnGenerationSolver::columngenerationsolver
+    KnapsackSolver::dynamic_programming_primal_dual
+    OptimizationTools::graph)
+add_library(KnapsackWithConflictsSolver::column_generation ALIAS KnapsackWithConflictsSolver_column_generation)

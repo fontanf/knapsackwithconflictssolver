@@ -40,6 +40,8 @@ Objective:
 
 - Lagrangian relaxation `--algorithm lagrangian-relaxation --solver dlib`
 
+- Column generation `--algorithm column-generation`
+
 ## Usage (command line)
 
 Compile:

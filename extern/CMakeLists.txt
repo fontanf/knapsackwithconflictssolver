@@ -81,7 +81,7 @@ endif()
 FetchContent_Declare(
     columngenerationsolver
     GIT_REPOSITORY https://github.com/fontanf/columngenerationsolver.git
-    GIT_TAG 556971624c92c23c961371ce5721ff9eb920a874)
+    GIT_TAG 73b9332651f59a177cf633ad46528a630aa982c2)
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../columngenerationsolver/")
 FetchContent_MakeAvailable(columngenerationsolver)
 

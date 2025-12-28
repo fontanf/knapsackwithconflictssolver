@@ -29,6 +29,7 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
         KnapsackWithConflictsSolver_milp_2
         KnapsackWithConflictsSolver_milp_3
         KnapsackWithConflictsSolver_lagrangian_relaxation
+        KnapsackWithConflictsSolver_column_generation
         Boost::program_options)
     set_target_properties(KnapsackWithConflictsSolver_main PROPERTIES OUTPUT_NAME "knapsackwithconflictssolver")
     install(TARGETS KnapsackWithConflictsSolver_main)
