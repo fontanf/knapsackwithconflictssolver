@@ -195,6 +195,8 @@ Output run(
     } else if (algorithm == "lagrangian-relaxation") {
         LagrangianRelaxationParameters parameters;
         read_args(parameters, vm);
+        if (vm.count("solver"))
+            parameters.solver = vm["solver"].as<mathoptsolverscmake::SolverName>();
         return lagrangian_relaxation(instance, nullptr, parameters);
 
     } else if (algorithm == "column-generation") {
