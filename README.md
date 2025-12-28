@@ -4,20 +4,18 @@ A solver for the knapsack problem with conflicts.
 
 ## Problem description
 
-Input:
+**Input**:
 - a knapsack with capacity $C$
 - $n$ items; for each item $j = 1..n$, a weight $w_j$ and a profit $p_j$
 - a graph $G$ such that each node corresponds to an item
 
-Problem:
-- Select a subset of items such that:
+**Problem**: select a subset of items such that:
   - the total weight of the selected items does not exceed the knapsack
     capacity
   - if there exists an edge between vertex $j_1$ and vertex $j_2$ in $G$, then item
     $j_1$ and item $j_2$ must not be both selected
 
-Objective:
-- Maximize the total profit of the selected items
+**Objective**: maximize the total profit of the selected items
 
 ## Implemented algorithms
 
