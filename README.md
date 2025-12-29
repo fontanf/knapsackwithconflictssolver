@@ -42,7 +42,9 @@ Research code for the knapsack problem with conflicts / disjunctively constraine
 
 - Lagrangian relaxation `--algorithm lagrangian-relaxation --solver dlib`
 
-- Column generation `--algorithm column-generation`
+- Column generation implemented with [fontanf/columngenerationsolver](https://github.com/fontanf/columngenerationsolver) `--algorithm column-generation`
+
+- Tree search implemented with [fontanf/treesearchsolver](https://github.com/fontanf/treesearchsolver) `--algorithm tree-search`
 
 ## Usage (command line)
 

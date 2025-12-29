@@ -3,8 +3,8 @@
 #include "knapsackwithconflictssolver/algorithm_formatter.hpp"
 
 #include "treesearchsolver/best_first_search.hpp"
-#include "treesearchsolver/anytime_column_search.hpp"
-#include "treesearchsolver/iterative_beam_search.hpp"
+//#include "treesearchsolver/anytime_column_search.hpp"
+//#include "treesearchsolver/iterative_beam_search.hpp"
 
 using namespace knapsackwithconflictssolver;
 
@@ -67,11 +67,15 @@ public:
 
     BranchingScheme(
             const Instance& instance,
+            TreeSearchOutput& output,
             AlgorithmFormatter& algorithm_formatter,
             const Parameters& parameters):
         instance_(instance),
+        output_(output),
         algorithm_formatter_(algorithm_formatter),
-        parameters_(parameters)
+        parameters_(parameters),
+        solution_items_(instance.number_of_items()),
+        available_items_(instance.number_of_items())
     {
         sorted_items_ = std::vector<ItemId>(instance.number_of_items(), -1);
         std::iota(sorted_items_.begin(), sorted_items_.end(), 0);
@@ -195,31 +199,37 @@ public:
             w += item.weight;
         }
 
-        Solution solution(instance_);
-        std::vector<uint8_t> available_items(instance_.number_of_items(), 1);
+        Profit solution_profit = 0;
+        Weight solution_weight = 0;
+        solution_items_.clear();
+        std::fill(available_items_.begin(), available_items_.end(), 1);
         for (auto node_tmp = child;
                 node_tmp->parent != nullptr;
                 node_tmp = node_tmp->parent) {
             ItemId item_id = node_tmp->item_id;
             const Item& item = instance_.item(item_id);
-            solution.add(item_id);
-            available_items[item_id] = 0;
+            solution_items_.add(item_id);
+            solution_profit += item.profit;
+            solution_weight += item.weight;
+            available_items_[item_id] = 0;
             for (const ItemConflict& conflict: item.neighbors)
-                available_items[conflict.item_id] = 0;
+                available_items_[conflict.item_id] = 0;
         }
         for (ItemId pos = child->next_child_pos; pos < instance_.number_of_items(); ++pos) {
             ItemId item_id = sorted_items_[pos];
-            if (available_items[item_id] == 0)
+            if (available_items_[item_id] == 0)
                 continue;
             const Item& item = instance_.item(item_id);
-            if (solution.weight() + item.weight > instance_.capacity()) {
-                solution.add(item_id);
+            if (solution_weight + item.weight > instance_.capacity()) {
+                solution_items_.add(item_id);
+                solution_profit += item.profit;
+                solution_weight += item.weight;
                 ItemId item_best_id = -1;
                 Profit profit_best = 0;
-                for (ItemId item_id: solution.items()) {
+                for (ItemId item_id: solution_items_) {
                     const Item& item = instance_.item(item_id);
-                    Profit profit = solution.profit() - item.profit;
-                    Weight weight = solution.weight() - item.weight;
+                    Profit profit = solution_profit - item.profit;
+                    Weight weight = solution_weight - item.weight;
                     if (weight > instance_.capacity())
                         continue;
                     if (item_best_id == -1
@@ -228,19 +238,28 @@ public:
                         profit_best = profit;
                     }
                 }
-                solution.remove(item_best_id);
+                solution_items_.remove(item_id);
+                solution_profit -= item.profit;
+                solution_weight -= item.weight;
                 break;
             }
-            solution.add(item_id);
-            available_items[item_id] = 0;
+            solution_items_.add(item_id);
+            solution_profit += item.profit;
+            solution_weight += item.weight;
+            available_items_[item_id] = 0;
             for (const ItemConflict& conflict: item.neighbors)
-                available_items[conflict.item_id] = 0;
+                available_items_[conflict.item_id] = 0;
         }
         //std::cout << "solution profit " << solution.profit()
         //    << " weight " << solution.weight()
         //    << " # conflicts " << solution.number_of_conflicts()
         //    << std::endl;
-        algorithm_formatter_.update_solution(solution, "");
+        if (output_.solution.profit() < solution_profit) {
+            Solution solution(instance_);
+            for (ItemId item_id: solution_items_)
+                solution.add(item_id);
+            algorithm_formatter_.update_solution(solution, "");
+        }
 
         //child->guide =
         //    (parameters_.guide_id == 0)? (double)child->weight / child->profit:
@@ -375,9 +394,15 @@ private:
     /** Parameters. */
     Parameters parameters_;
 
+    TreeSearchOutput& output_;
+
     AlgorithmFormatter& algorithm_formatter_;
 
     std::vector<ItemId> sorted_items_;
+
+    mutable optimizationtools::IndexedSet solution_items_;
+
+    mutable std::vector<uint8_t> available_items_;
 
     mutable NodeId node_id_ = 0;
 
@@ -401,7 +426,7 @@ const TreeSearchOutput knapsackwithconflictssolver::tree_search(
     algorithm_formatter.print_header();
 
     BranchingScheme::Parameters branching_scheme_parameters;
-    BranchingScheme branching_scheme(instance, algorithm_formatter, branching_scheme_parameters);
+    BranchingScheme branching_scheme(instance, output, algorithm_formatter, branching_scheme_parameters);
     treesearchsolver::BestFirstSearchParameters<BranchingScheme> bfs_parameters;
     //treesearchsolver::AnytimeColumnSearchParameters<BranchingScheme> bfs_parameters;
     //treesearchsolver::IterativeBeamSearchParameters<BranchingScheme> bfs_parameters;
