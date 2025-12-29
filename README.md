@@ -1,6 +1,6 @@
 # KnapsackWithConflictsSolver
 
-A solver for the knapsack problem with conflicts.
+Research code for the knapsack problem with conflicts / disjunctively constrained knapsack problem.
 
 ## Problem description
 
