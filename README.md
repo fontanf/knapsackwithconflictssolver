@@ -38,6 +38,8 @@ A solver for the knapsack problem with conflicts.
   - Model 3, clique constraints `--algorithm milp-3`
     - Linear relaxation `--algorithm milp-3-linear-relaxation`
 
+- CP-SAT solved with OR-Tools `--algorithm cp-sat-ortools`
+
 - Lagrangian relaxation `--algorithm lagrangian-relaxation --solver dlib`
 
 - Column generation `--algorithm column-generation`

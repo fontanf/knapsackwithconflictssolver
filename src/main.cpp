@@ -8,6 +8,9 @@
 #include "knapsackwithconflictssolver/algorithms/milp.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp_2.hpp"
 #include "knapsackwithconflictssolver/algorithms/milp_3.hpp"
+#if ORTOOLS_FOUND
+#include "knapsackwithconflictssolver/algorithms/cp_sat_ortools.hpp"
+#endif
 #include "knapsackwithconflictssolver/algorithms/lagrangian_relaxation.hpp"
 #include "knapsackwithconflictssolver/algorithms/column_generation.hpp"
 
@@ -191,6 +194,13 @@ Output run(
         XPRSfree();
 #endif
         return milp_3_linear_reaxation_output;
+
+#if ORTOOLS_FOUND
+    } else if (algorithm == "cp-sat-ortools") {
+        CpSatOrtoolsParameters parameters;
+        read_args(parameters, vm);
+        return cp_sat_ortools(instance, parameters);
+#endif
 
     } else if (algorithm == "lagrangian-relaxation") {
         LagrangianRelaxationParameters parameters;

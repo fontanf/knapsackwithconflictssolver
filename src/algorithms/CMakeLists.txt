@@ -71,6 +71,22 @@ target_link_libraries(KnapsackWithConflictsSolver_milp_3 PUBLIC
     MathOptSolversCMake::milp)
 add_library(KnapsackWithConflictsSolver::milp_3 ALIAS KnapsackWithConflictsSolver_milp_3)
 
+if(KNAPSACKWITHCONFLICTSSOLVER_USE_ORTOOLS)
+    list(APPEND CMAKE_PREFIX_PATH "$ENV{ORTOOLSDIR}")
+    find_package(ortools CONFIG REQUIRED)
+    add_library(KnapsackWithConflictsSolver_cp_sat_ortools)
+    target_sources(KnapsackWithConflictsSolver_cp_sat_ortools PRIVATE
+        cp_sat_ortools.cpp)
+    target_include_directories(KnapsackWithConflictsSolver_cp_sat_ortools PUBLIC
+        ${PROJECT_SOURCE_DIR}/include)
+    target_compile_definitions(KnapsackWithConflictsSolver_cp_sat_ortools PUBLIC
+        ORTOOLS_FOUND=1)
+    target_link_libraries(KnapsackWithConflictsSolver_cp_sat_ortools PUBLIC
+    KnapsackWithConflictsSolver_knapsack_with_conflicts
+        ortools::ortools)
+    add_library(KnapsackWithConflictsSolver::cp_sat_ortools ALIAS KnapsackWithConflictsSolver_cp_sat_ortools)
+endif()
+
 add_library(KnapsackWithConflictsSolver_lagrangian_relaxation)
 target_sources(KnapsackWithConflictsSolver_lagrangian_relaxation PRIVATE
     lagrangian_relaxation.cpp)

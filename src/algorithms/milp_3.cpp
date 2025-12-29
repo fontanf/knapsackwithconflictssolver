@@ -334,7 +334,6 @@ Milp3LinearRelaxationOutput knapsackwithconflictssolver::milp_3_linear_relaxatio
     Milp3LinearRelaxationOutput output(instance);
     AlgorithmFormatter algorithm_formatter(parameters, output);
     algorithm_formatter.start("MILP 3 - linear relaxation");
-
     algorithm_formatter.print_header();
 
     mathoptsolverscmake::MilpModel milp_model = create_milp_model(instance);

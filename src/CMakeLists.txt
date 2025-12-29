@@ -31,6 +31,10 @@ if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
         KnapsackWithConflictsSolver_lagrangian_relaxation
         KnapsackWithConflictsSolver_column_generation
         Boost::program_options)
+    if(KNAPSACKWITHCONFLICTSSOLVER_USE_ORTOOLS)
+        target_link_libraries(KnapsackWithConflictsSolver_main PUBLIC
+            KnapsackWithConflictsSolver_cp_sat_ortools)
+    endif()
     set_target_properties(KnapsackWithConflictsSolver_main PROPERTIES OUTPUT_NAME "knapsackwithconflictssolver")
     install(TARGETS KnapsackWithConflictsSolver_main)
 
