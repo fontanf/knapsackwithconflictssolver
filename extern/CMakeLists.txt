@@ -32,6 +32,9 @@ endif()
 if(KNAPSACKWITHCONFLICTSSOLVER_USE_HIGHS)
     set(MATHOPTSOLVERSCMAKE_USE_HIGHS ON)
 endif()
+if(KNAPSACKWITHCONFLICTSSOLVER_USE_KNITRO)
+    set(MATHOPTSOLVERSCMAKE_USE_KNITRO ON)
+endif()
 if(KNAPSACKWITHCONFLICTSSOLVER_USE_DLIB)
     set(MATHOPTSOLVERSCMAKE_USE_DLIB ON)
 endif()
@@ -41,7 +44,7 @@ endif()
 FetchContent_Declare(
     mathoptsolverscmake
     GIT_REPOSITORY https://github.com/fontanf/mathoptsolverscmake.git
-    GIT_TAG fb99c73883c06841fbecf74437322c8ee3a4a365
+    GIT_TAG 7bd4a1b285b14c80fa7e54522b730e2985ab47ef
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../mathoptsolverscmake/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(mathoptsolverscmake)

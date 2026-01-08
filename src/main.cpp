@@ -207,11 +207,15 @@ Output run(
         read_args(parameters, vm);
         if (vm.count("solver"))
             parameters.solver = vm["solver"].as<mathoptsolverscmake::SolverName>();
+        if (vm.count("conflicts-strategy"))
+            parameters.conflicts_strategy = vm["conflicts-strategy"].as<int>();
         return lagrangian_relaxation(instance, nullptr, parameters);
 
     } else if (algorithm == "column-generation") {
         ColumnGenerationParameters parameters;
         read_args(parameters, vm);
+        if (vm.count("conflicts-strategy"))
+            parameters.conflicts_strategy = vm["conflicts-strategy"].as<int>();
         return column_generation(instance, parameters);
 
     } else {
@@ -243,7 +247,8 @@ int main(int argc, char *argv[])
         ("log-to-stderr", "write log to stderr")
 
         ("stable-weight-strategy,", po::value<int>(), "set stable weight strategy (sequential-decomposition)")
-        ("solver,", po::value<mathoptsolverscmake::SolverName>(), "set solver (milp)")
+        ("solver,", po::value<mathoptsolverscmake::SolverName>(), "set solver (milp, lagrangian-relaxation)")
+        ("conflicts-strategy,", po::value<int>(), "set conflicts strategy (column-generation, lagrangian-relaxation)")
         ;
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);

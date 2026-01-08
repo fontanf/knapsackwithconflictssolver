@@ -257,6 +257,14 @@ LagrangianRelaxationOutput knapsackwithconflictssolver::lagrangian_relaxation(
 
         // Solve.
         double bcnlp_bound = 0;
+#if KNITRO_FOUND
+    if (parameters.solver == mathoptsolverscmake::SolverName::Knitro) {
+        knitrocpp::Context knitro_context;
+        mathoptsolverscmake::solve(model, knitro_context);
+        bcnlp_bound = mathoptsolverscmake::get_solution_value(knitro_context);
+        output.multipliers = mathoptsolverscmake::get_solution(knitro_context);
+    }
+#endif
 #if DLIB_FOUND
         if (parameters.solver == mathoptsolverscmake::SolverName::Dlib) {
             mathoptsolverscmake::BoxConstrainedNlpDlibOutput dlib_output = mathoptsolverscmake::solve_dlib(model);
@@ -266,9 +274,13 @@ LagrangianRelaxationOutput knapsackwithconflictssolver::lagrangian_relaxation(
 #endif
 #if CONICBUNDLE_FOUND
         if (parameters.solver == mathoptsolverscmake::SolverName::ConicBundle) {
-            mathoptsolverscmake::BoxConstrainedNlpConicBundleOutput conicbundle_output = mathoptsolverscmake::solve_conicbundle(model);
-            bcnlp_bound = conicbundle_output.objective_value;
-            output.multipliers = conicbundle_output.solution;
+            ConicBundle::CBSolver solver(&std::cout, 1);
+            // Set relative precision
+            solver.set_term_relprec(1e-8);
+            mathoptsolverscmake::solve(model, solver);
+            solver.print_termination_code(std::cout);
+            bcnlp_bound = mathoptsolverscmake::get_solution_value(model, solver);
+            output.multipliers = mathoptsolverscmake::get_solution(model, solver);
         }
 #endif
 
