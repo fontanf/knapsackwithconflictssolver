@@ -2,7 +2,7 @@
 
 #include "knapsackwithconflictssolver/algorithm_formatter.hpp"
 
-#include "mathoptsolverscmake/common.hpp"
+#include "mathoptsolverscmake/mathopt.hpp"
 
 namespace knapsackwithconflictssolver
 {

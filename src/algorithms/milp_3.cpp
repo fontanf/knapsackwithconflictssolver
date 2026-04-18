@@ -4,14 +4,22 @@
 
 #include "optimizationtools/graph/clique.hpp"
 
-#include "mathoptsolverscmake/milp.hpp"
+#ifdef CBC_FOUND
+#include "mathoptsolverscmake/mathopt_cbc.hpp"
+#endif
+#ifdef HIGHS_FOUND
+#include "mathoptsolverscmake/mathopt_highs.hpp"
+#endif
+#ifdef XPRESS_FOUND
+#include "mathoptsolverscmake/mathopt_xpress.hpp"
+#endif
 
 using namespace knapsackwithconflictssolver;
 
 namespace
 {
 
-mathoptsolverscmake::MilpModel create_milp_model(
+mathoptsolverscmake::MathOptModel create_milp_model(
         const Instance& instance)
 {
     optimizationtools::AdjacencyListGraphBuilder graph_builder;
@@ -38,7 +46,7 @@ mathoptsolverscmake::MilpModel create_milp_model(
     std::vector<std::vector<optimizationtools::VertexId>> clique_partition
         = optimizationtools::edge_clique_partition(graph);
 
-    mathoptsolverscmake::MilpModel model;
+    mathoptsolverscmake::MathOptModel model;
 
     // Variable and objective.
     model.objective_direction = mathoptsolverscmake::ObjectiveDirection::Maximize;
@@ -224,7 +232,7 @@ Milp3Output knapsackwithconflictssolver::milp_3(
 
     algorithm_formatter.print_header();
 
-    mathoptsolverscmake::MilpModel milp_model = create_milp_model(instance);
+    mathoptsolverscmake::MathOptModel milp_model = create_milp_model(instance);
     std::vector<double> milp_solution;
     double milp_bound = instance.total_profit();
 
@@ -336,7 +344,7 @@ Milp3LinearRelaxationOutput knapsackwithconflictssolver::milp_3_linear_relaxatio
     algorithm_formatter.start("MILP 3 - linear relaxation");
     algorithm_formatter.print_header();
 
-    mathoptsolverscmake::MilpModel milp_model = create_milp_model(instance);
+    mathoptsolverscmake::MathOptModel milp_model = create_milp_model(instance);
     for (int variable_id = 0;
             variable_id < milp_model.number_of_variables();
             ++variable_id) {

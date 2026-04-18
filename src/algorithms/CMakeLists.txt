@@ -47,7 +47,7 @@ target_include_directories(KnapsackWithConflictsSolver_milp PUBLIC
     ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(KnapsackWithConflictsSolver_milp PUBLIC
     KnapsackWithConflictsSolver_knapsack_with_conflicts
-    MathOptSolversCMake::milp)
+    MathOptSolversCMake::mathopt)
 add_library(KnapsackWithConflictsSolver::milp ALIAS KnapsackWithConflictsSolver_milp)
 
 add_library(KnapsackWithConflictsSolver_milp_2)
@@ -57,7 +57,7 @@ target_include_directories(KnapsackWithConflictsSolver_milp_2 PUBLIC
     ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(KnapsackWithConflictsSolver_milp_2 PUBLIC
     KnapsackWithConflictsSolver_knapsack_with_conflicts
-    MathOptSolversCMake::milp)
+    MathOptSolversCMake::mathopt)
 add_library(KnapsackWithConflictsSolver::milp_2 ALIAS KnapsackWithConflictsSolver_milp_2)
 
 add_library(KnapsackWithConflictsSolver_milp_3)
@@ -68,7 +68,7 @@ target_include_directories(KnapsackWithConflictsSolver_milp_3 PUBLIC
 target_link_libraries(KnapsackWithConflictsSolver_milp_3 PUBLIC
     KnapsackWithConflictsSolver_knapsack_with_conflicts
     OptimizationTools::graph
-    MathOptSolversCMake::milp)
+    MathOptSolversCMake::mathopt)
 add_library(KnapsackWithConflictsSolver::milp_3 ALIAS KnapsackWithConflictsSolver_milp_3)
 
 if(KNAPSACKWITHCONFLICTSSOLVER_USE_ORTOOLS)
@@ -95,7 +95,7 @@ target_include_directories(KnapsackWithConflictsSolver_lagrangian_relaxation PUB
 target_link_libraries(KnapsackWithConflictsSolver_lagrangian_relaxation PUBLIC
     KnapsackWithConflictsSolver_knapsack_with_conflicts
     OptimizationTools::graph
-    MathOptSolversCMake::box_constrained_nlp)
+    MathOptSolversCMake::mathopt)
 add_library(KnapsackWithConflictsSolver::lagrangian_relaxation ALIAS KnapsackWithConflictsSolver_lagrangian_relaxation)
 
 add_library(KnapsackWithConflictsSolver_column_generation)

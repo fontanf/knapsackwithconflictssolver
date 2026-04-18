@@ -4,7 +4,15 @@
 
 #include "optimizationtools/graph/clique.hpp"
 
-#include "mathoptsolverscmake/box_constrained_nlp.hpp"
+#if KNITRO_FOUND
+#include "mathoptsolverscmake/mathopt_knitro.hpp"
+#endif
+#if DLIB_FOUND
+#include "mathoptsolverscmake/mathopt_dlib.hpp"
+#endif
+#if CONICBUNDLE_FOUND
+#include "mathoptsolverscmake/mathopt_conicbundle.hpp"
+#endif
 
 using namespace knapsackwithconflictssolver;
 
@@ -104,7 +112,7 @@ LagrangianRelaxationOutput knapsackwithconflictssolver::lagrangian_relaxation(
     auto f = [&instance, &output, &items_conflicts](
             const std::vector<double>& multipliers)
     {
-        mathoptsolverscmake::BoxConstrainedNlpFunctionOutput bcnlp_output;
+        mathoptsolverscmake::BlackBoxFunctionOutput bcnlp_output;
 
         // Initialize bound and gradient;
         bcnlp_output.objective_value = 0;
@@ -238,7 +246,7 @@ LagrangianRelaxationOutput knapsackwithconflictssolver::lagrangian_relaxation(
         update_items_conflicts(output.cliques, items_conflicts);
 
         // Set-up box-constrained nonlinear model.
-        mathoptsolverscmake::BoxConstrainedNlpModel model;
+        mathoptsolverscmake::MathOptModel model;
         model.objective_direction = mathoptsolverscmake::ObjectiveDirection::Minimize;
         model.objective_function = f;
         for (ConflictId clique_id = 0;
@@ -267,7 +275,7 @@ LagrangianRelaxationOutput knapsackwithconflictssolver::lagrangian_relaxation(
 #endif
 #if DLIB_FOUND
         if (parameters.solver == mathoptsolverscmake::SolverName::Dlib) {
-            mathoptsolverscmake::BoxConstrainedNlpDlibOutput dlib_output = mathoptsolverscmake::solve_dlib(model);
+            mathoptsolverscmake::DlibOutput dlib_output = mathoptsolverscmake::solve_dlib(model);
             bcnlp_bound = dlib_output.objective_value;
             output.multipliers = dlib_output.solution;
         }

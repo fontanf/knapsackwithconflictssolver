@@ -2,17 +2,25 @@
 
 #include "knapsackwithconflictssolver/algorithm_formatter.hpp"
 
-#include "mathoptsolverscmake/milp.hpp"
+#ifdef CBC_FOUND
+#include "mathoptsolverscmake/mathopt_cbc.hpp"
+#endif
+#ifdef HIGHS_FOUND
+#include "mathoptsolverscmake/mathopt_highs.hpp"
+#endif
+#ifdef XPRESS_FOUND
+#include "mathoptsolverscmake/mathopt_xpress.hpp"
+#endif
 
 using namespace knapsackwithconflictssolver;
 
 namespace
 {
 
-mathoptsolverscmake::MilpModel create_milp_model(
+mathoptsolverscmake::MathOptModel create_milp_model(
         const Instance& instance)
 {
-    mathoptsolverscmake::MilpModel model;
+    mathoptsolverscmake::MathOptModel model;
 
     // Variable and objective.
     model.objective_direction = mathoptsolverscmake::ObjectiveDirection::Maximize;
@@ -200,7 +208,7 @@ Milp2Output knapsackwithconflictssolver::milp_2(
 
     algorithm_formatter.print_header();
 
-    mathoptsolverscmake::MilpModel milp_model = create_milp_model(instance);
+    mathoptsolverscmake::MathOptModel milp_model = create_milp_model(instance);
     std::vector<double> milp_solution;
     double milp_bound = instance.total_profit();
 
@@ -313,7 +321,7 @@ Milp2LinearRelaxationOutput knapsackwithconflictssolver::milp_2_linear_relaxatio
 
     algorithm_formatter.print_header();
 
-    mathoptsolverscmake::MilpModel milp_model = create_milp_model(instance);
+    mathoptsolverscmake::MathOptModel milp_model = create_milp_model(instance);
     for (int variable_id = 0;
             variable_id < milp_model.number_of_variables();
             ++variable_id) {

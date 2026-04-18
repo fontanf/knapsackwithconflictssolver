@@ -2,21 +2,29 @@
 
 #include "knapsackwithconflictssolver/algorithm_formatter.hpp"
 
-#include "mathoptsolverscmake/milp.hpp"
+#ifdef CBC_FOUND
+#include "mathoptsolverscmake/mathopt_cbc.hpp"
+#endif
+#ifdef HIGHS_FOUND
+#include "mathoptsolverscmake/mathopt_highs.hpp"
+#endif
+#ifdef XPRESS_FOUND
+#include "mathoptsolverscmake/mathopt_xpress.hpp"
+#endif
 
 using namespace knapsackwithconflictssolver;
 
 namespace
 {
 
-mathoptsolverscmake::MilpModel create_milp_model(
+mathoptsolverscmake::MathOptModel create_milp_model(
         const Instance& instance)
 {
     int number_of_variables = instance.number_of_items();
     int number_of_constraints = 1 + instance.number_of_conflicts();
     int number_of_elements = instance.number_of_items() + 2 * instance.number_of_conflicts();
 
-    mathoptsolverscmake::MilpModel model(
+    mathoptsolverscmake::MathOptModel model(
             number_of_variables,
             number_of_constraints,
             number_of_elements);
@@ -219,7 +227,7 @@ MilpOutput knapsackwithconflictssolver::milp(
 
     algorithm_formatter.print_header();
 
-    mathoptsolverscmake::MilpModel milp_model = create_milp_model(instance);
+    mathoptsolverscmake::MathOptModel milp_model = create_milp_model(instance);
     std::vector<double> milp_solution;
     double milp_bound = instance.total_profit();
 
@@ -329,7 +337,7 @@ MilpLinearRelaxationOutput knapsackwithconflictssolver::milp_linear_relaxation(
 
     algorithm_formatter.print_header();
 
-    mathoptsolverscmake::MilpModel milp_model = create_milp_model(instance);
+    mathoptsolverscmake::MathOptModel milp_model = create_milp_model(instance);
     for (int variable_id = 0;
             variable_id < milp_model.number_of_variables();
             ++variable_id) {
@@ -366,7 +374,7 @@ void knapsackwithconflictssolver::write_mps(
         mathoptsolverscmake::SolverName solver,
         const std::string& output_path)
 {
-    mathoptsolverscmake::MilpModel milp_model = create_milp_model(instance);
+    mathoptsolverscmake::MathOptModel milp_model = create_milp_model(instance);
 
     if (solver == mathoptsolverscmake::SolverName::Cbc) {
 #ifdef CBC_FOUND

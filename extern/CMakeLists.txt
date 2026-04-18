@@ -44,7 +44,7 @@ endif()
 FetchContent_Declare(
     mathoptsolverscmake
     GIT_REPOSITORY https://github.com/fontanf/mathoptsolverscmake.git
-    GIT_TAG 7bd4a1b285b14c80fa7e54522b730e2985ab47ef
+    GIT_TAG c312e55d551edd57e98edfd24d4e2330abdcbbd2
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../mathoptsolverscmake/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(mathoptsolverscmake)
@@ -108,7 +108,7 @@ endif()
 FetchContent_Declare(
     multiplechoiceknapsacksolver
     GIT_REPOSITORY https://github.com/fontanf/multiplechoiceknapsacksolver.git
-    GIT_TAG 98cddecafa6c2af03481747b885a053eb42f534b
+    GIT_TAG 041c7c217e2fdd4c92ffbaab384e42b585ed5db6
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../multiplechoiceknapsacksolver/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(multiplechoiceknapsacksolver)
@@ -122,7 +122,7 @@ endif()
 FetchContent_Declare(
     stablesolver
     GIT_REPOSITORY https://github.com/fontanf/stablesolver.git
-    GIT_TAG ba86b3fc199288f8182012ea49832d98de3a0ea9
+    GIT_TAG efab011b460c2675647fa1995011eb332ab9ec7d
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../stablesolver/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(stablesolver)
@@ -138,7 +138,7 @@ endif()
 FetchContent_Declare(
     setcoveringsolver
     GIT_REPOSITORY https://github.com/fontanf/setcoveringsolver.git
-    GIT_TAG 4d9190edcb2266ab6e54d7e6b0334fed30906524
+    GIT_TAG 6b24f8cb0a8e5baa6849283e5250aa4a3bd09aff
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../setcoveringsolver/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(setcoveringsolver)
