@@ -2,6 +2,8 @@
 
 #include "knapsackwithconflictssolver/algorithm_formatter.hpp"
 
+#include "mathoptsolverscmake/mathopt_mps.hpp"
+
 #include "optimizationtools/graph/clique.hpp"
 
 #ifdef CBC_FOUND
@@ -373,4 +375,12 @@ Milp3LinearRelaxationOutput knapsackwithconflictssolver::milp_3_linear_relaxatio
 
     algorithm_formatter.end();
     return output;
+}
+
+void knapsackwithconflictssolver::write_mps_3(
+        const Instance& instance,
+        const std::string& output_path)
+{
+    mathoptsolverscmake::MathOptModel milp_model = create_milp_model(instance);
+    mathoptsolverscmake::write_mps(milp_model, output_path);
 }

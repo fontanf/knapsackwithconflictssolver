@@ -33,6 +33,6 @@ if __name__ == "__main__":
                 f"{main}"
                 f"  --input \"{instance_path}\""
                 f" --format \"{instance_format}\""
-                f"  --solver highs"
+                f"  --model milp"
                 f"  --output \"{output_path}\"")
         run_command(command)

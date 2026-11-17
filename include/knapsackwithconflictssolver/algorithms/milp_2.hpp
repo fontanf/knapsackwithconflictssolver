@@ -85,7 +85,6 @@ Milp2LinearRelaxationOutput milp_2_linear_relaxation(
 
 void write_mps_2(
         const Instance& instance,
-        mathoptsolverscmake::SolverName solver,
         const std::string& output_path);
 
 }

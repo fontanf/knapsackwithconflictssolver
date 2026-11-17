@@ -6,6 +6,7 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 
+#include <stdexcept>
 #include <string>
 
 using namespace knapsackwithconflictssolver;
@@ -19,7 +20,6 @@ int main(int argc, char *argv[])
         (",h", "Produce help message")
         ("input,i", po::value<std::string>()->required(), "set input path")
         ("format,f", po::value<std::string>()->required(), "set input format")
-        ("solver,", po::value<mathoptsolverscmake::SolverName>()->required(), "set solver")
         ("model,", po::value<std::string>()->required(), "set model")
         ("output,o", po::value<std::string>()->required(), "set output path")
         ;
@@ -47,18 +47,18 @@ int main(int argc, char *argv[])
     if (model == "milp") {
         write_mps(
                 instance,
-                vm["solver"].as<mathoptsolverscmake::SolverName>(),
                 vm["output"].as<std::string>());
     } else if (model == "milp-2") {
-        //write_mps_2(
-        //        instance,
-        //        vm["solver"].as<mathoptsolverscmake::SolverName>(),
-        //        vm["output"].as<std::string>());
+        write_mps_2(
+                instance,
+                vm["output"].as<std::string>());
     } else if (model == "milp-3") {
-        //write_mps_3(
-        //        instance,
-        //        vm["solver"].as<mathoptsolverscmake::SolverName>(),
-        //        vm["output"].as<std::string>());
+        write_mps_3(
+                instance,
+                vm["output"].as<std::string>());
+    } else {
+        throw std::invalid_argument(
+                "Unknown model: \"" + model + "\".");
     }
 
     return 0;
