@@ -267,8 +267,9 @@ LagrangianRelaxationOutput knapsackwithconflictssolver::lagrangian_relaxation(
         double bcnlp_bound = 0;
 #if KNITRO_FOUND
     if (parameters.solver == mathoptsolverscmake::SolverName::Knitro) {
-        knitrocpp::Context knitro_context;
-        mathoptsolverscmake::solve(model, knitro_context);
+        mathoptsolverscmake::KnitroContext knitro_context;
+        mathoptsolverscmake::load(knitro_context, model);
+        mathoptsolverscmake::solve(knitro_context);
         bcnlp_bound = mathoptsolverscmake::get_solution_value(knitro_context);
         output.multipliers = mathoptsolverscmake::get_solution(knitro_context);
     }
