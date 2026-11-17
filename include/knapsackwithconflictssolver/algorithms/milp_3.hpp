@@ -85,7 +85,6 @@ Milp3LinearRelaxationOutput milp_3_linear_relaxation(
 
 void write_mps_3(
         const Instance& instance,
-        mathoptsolverscmake::SolverName solver,
         const std::string& output_path);
 
 }

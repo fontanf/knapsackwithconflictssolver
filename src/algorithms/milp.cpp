@@ -2,6 +2,8 @@
 
 #include "knapsackwithconflictssolver/algorithm_formatter.hpp"
 
+#include "mathoptsolverscmake/mathopt_mps.hpp"
+
 #ifdef CBC_FOUND
 #include "mathoptsolverscmake/mathopt_cbc.hpp"
 #endif
@@ -370,42 +372,8 @@ MilpLinearRelaxationOutput knapsackwithconflictssolver::milp_linear_relaxation(
 
 void knapsackwithconflictssolver::write_mps(
         const Instance& instance,
-        mathoptsolverscmake::SolverName solver,
         const std::string& output_path)
 {
     mathoptsolverscmake::MathOptModel milp_model = create_milp_model(instance);
-
-    if (solver == mathoptsolverscmake::SolverName::Cbc) {
-#ifdef CBC_FOUND
-        mathoptsolverscmake::CbcModel cbc_model;
-        mathoptsolverscmake::load(cbc_model, milp_model);
-        cbc_model.model.solver()->writeMps(output_path.c_str());
-#else
-        throw std::invalid_argument("");
-#endif
-
-    } else if (solver == mathoptsolverscmake::SolverName::Highs) {
-#ifdef HIGHS_FOUND
-        Highs highs;
-        mathoptsolverscmake::load(highs, milp_model);
-        highs.writeModel(output_path);
-#else
-        throw std::invalid_argument("");
-#endif
-
-    } else if (solver == mathoptsolverscmake::SolverName::Xpress) {
-#ifdef XPRESS_FOUND
-        XPRSprob xpress_model;
-        XPRScreateprob(&xpress_model);
-        mathoptsolverscmake::load(xpress_model, milp_model);
-        mathoptsolverscmake::write_mps(xpress_model, "kpc.mps");
-        XPRSdestroyprob(xpress_model);
-#else
-        throw std::invalid_argument("");
-#endif
-
-    } else {
-        throw std::invalid_argument("");
-    }
-
+    mathoptsolverscmake::write_mps(milp_model, output_path);
 }
