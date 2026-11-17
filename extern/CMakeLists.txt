@@ -2,15 +2,42 @@
 include(FetchContent)
 
 # Fetch boost.
-if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN)
+# SMS++ requires Boost, even if the main executable isn't built.
+if(KNAPSACKWITHCONFLICTSSOLVER_BUILD_MAIN OR KNAPSACKWITHCONFLICTSSOLVER_USE_SMSPP)
     set(BOOST_INCLUDE_LIBRARIES thread filesystem system program_options dynamic_bitset)
+    if(KNAPSACKWITHCONFLICTSSOLVER_USE_SMSPP)
+        # Header-only Boost libraries #include'd directly by SMS++/BundleSolver
+        # (e.g. SMS++'s AbstractBlock.cpp includes <boost/algorithm/string.hpp>).
+        # Boost's modular CMake build only exposes headers for libraries listed
+        # here, even though the boost-*.tar.xz release ships all of Boost's
+        # sources.
+        list(APPEND BOOST_INCLUDE_LIBRARIES algorithm any bimap function functional multi_array preprocessor)
+    endif()
     set(BOOST_ENABLE_CMAKE ON)
     include(FetchContent)
     FetchContent_Declare(
         Boost
         URL https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.tar.xz
-        EXCLUDE_FROM_ALL)
+        EXCLUDE_FROM_ALL
+        OVERRIDE_FIND_PACKAGE)
     FetchContent_MakeAvailable(Boost)
+
+    # Boost fetched via FetchContent only defines per-component targets (e.g.
+    # Boost::filesystem), and Boost::headers is just an (essentially empty) meta
+    # package, NOT an aggregate of every other component's headers -- unlike a
+    # classic system-wide Boost install, where one include path exposes all of
+    # Boost regardless of which libraries are actually used. The "Boost::boost"
+    # compatibility target normally provided by a plain find_package(Boost) is
+    # not created either, so define it here, linked against every library we
+    # fetched, so dependencies (e.g. SMS++) that link against Boost::boost
+    # directly and #include whichever Boost headers they need can still find
+    # them all.
+    if(NOT TARGET Boost::boost)
+        add_library(Boost::boost INTERFACE IMPORTED)
+        foreach(_boost_lib IN LISTS BOOST_INCLUDE_LIBRARIES)
+            target_link_libraries(Boost::boost INTERFACE Boost::${_boost_lib})
+        endforeach()
+    endif()
 endif()
 
 # Fetch fontanf/optimizationtools.
@@ -40,6 +67,9 @@ if(KNAPSACKWITHCONFLICTSSOLVER_USE_DLIB)
 endif()
 if(KNAPSACKWITHCONFLICTSSOLVER_USE_CONICBUNDLE)
     set(MATHOPTSOLVERSCMAKE_USE_CONICBUNDLE ON)
+endif()
+if(KNAPSACKWITHCONFLICTSSOLVER_USE_SMSPP)
+    set(MATHOPTSOLVERSCMAKE_USE_SMSPP ON)
 endif()
 FetchContent_Declare(
     mathoptsolverscmake

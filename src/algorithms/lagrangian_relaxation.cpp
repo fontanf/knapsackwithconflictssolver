@@ -13,6 +13,9 @@
 #if CONICBUNDLE_FOUND
 #include "mathoptsolverscmake/mathopt_conicbundle.hpp"
 #endif
+#if SMSPP_FOUND
+#include "mathoptsolverscmake/mathopt_smspp.hpp"
+#endif
 
 using namespace knapsackwithconflictssolver;
 
@@ -290,6 +293,13 @@ LagrangianRelaxationOutput knapsackwithconflictssolver::lagrangian_relaxation(
             solver.print_termination_code(std::cout);
             bcnlp_bound = mathoptsolverscmake::get_solution_value(model, solver);
             output.multipliers = mathoptsolverscmake::get_solution(model, solver);
+        }
+#endif
+#if SMSPP_FOUND
+        if (parameters.solver == mathoptsolverscmake::SolverName::Smspp) {
+            mathoptsolverscmake::SmsppOutput smspp_output = mathoptsolverscmake::solve_smspp(model);
+            bcnlp_bound = smspp_output.objective_value;
+            output.multipliers = smspp_output.solution;
         }
 #endif
 
