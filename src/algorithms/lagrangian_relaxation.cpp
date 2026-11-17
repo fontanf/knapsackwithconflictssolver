@@ -17,10 +17,38 @@
 #include "mathoptsolverscmake/mathopt_smspp.hpp"
 #endif
 
+#include <sstream>
+#include <stdexcept>
+
 using namespace knapsackwithconflictssolver;
 
 namespace
 {
+
+/** Check if a solver of the Lagrangian dual is available in this build. */
+bool is_available(mathoptsolverscmake::SolverName solver)
+{
+    switch (solver) {
+#if KNITRO_FOUND
+    case mathoptsolverscmake::SolverName::Knitro:
+        return true;
+#endif
+#if DLIB_FOUND
+    case mathoptsolverscmake::SolverName::Dlib:
+        return true;
+#endif
+#if CONICBUNDLE_FOUND
+    case mathoptsolverscmake::SolverName::ConicBundle:
+        return true;
+#endif
+#if SMSPP_FOUND
+    case mathoptsolverscmake::SolverName::Smspp:
+        return true;
+#endif
+    default:
+        return false;
+    }
+}
 
 void update_items_conflicts(
         const std::vector<std::vector<optimizationtools::VertexId>>& cliques,
@@ -106,6 +134,15 @@ LagrangianRelaxationOutput knapsackwithconflictssolver::lagrangian_relaxation(
         std::vector<double>* initial_multipliers,
         const LagrangianRelaxationParameters& parameters)
 {
+    if (!is_available(parameters.solver)) {
+        std::stringstream ss;
+        ss << FUNC_SIGNATURE << ": "
+            << "solver \"" << parameters.solver << "\" is not available; "
+            << "available solvers are Knitro, dlib, ConicBundle and SMS++, "
+            << "if enabled at build time.";
+        throw std::invalid_argument(ss.str());
+    }
+
     LagrangianRelaxationOutput output(instance);
     AlgorithmFormatter algorithm_formatter(parameters, output);
     algorithm_formatter.start("Lagrangian relaxation");
