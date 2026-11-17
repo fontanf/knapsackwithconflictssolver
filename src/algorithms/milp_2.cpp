@@ -134,7 +134,7 @@ CbcEventHandler::CbcAction EventHandler::event(CbcEvent which_event)
     const CbcModel& cbc_model = *model_;
 
     // Retrieve solution.
-    double milp_objective_value = -mathoptsolverscmake::get_solution_value(cbc_model);
+    double milp_objective_value = mathoptsolverscmake::get_solution_value(cbc_model);
     if (output_.solution.profit() < milp_objective_value) {
         std::vector<double> milp_solution = mathoptsolverscmake::get_solution(cbc_model);
         if (!milp_solution.empty()) {
@@ -144,7 +144,7 @@ CbcEventHandler::CbcAction EventHandler::event(CbcEvent which_event)
     }
 
     // Retrieve bound.
-    double milp_bound = -mathoptsolverscmake::get_bound(cbc_model);
+    double milp_bound = mathoptsolverscmake::get_bound(cbc_model);
     algorithm_formatter_.update_bound(std::ceil(milp_bound - 1e-7), "");
 
     // Check end.
