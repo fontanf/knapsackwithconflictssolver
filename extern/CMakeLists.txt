@@ -17,7 +17,7 @@ endif()
 FetchContent_Declare(
     optimizationtools
     GIT_REPOSITORY https://github.com/fontanf/optimizationtools.git
-    GIT_TAG 6398c6bf14a4a95010c65ec4cb7966aaedc8179d
+    GIT_TAG cf0e77052f300ca90eb533d59526955e6f8c8858
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../optimizationtools/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(optimizationtools)
@@ -122,7 +122,7 @@ endif()
 FetchContent_Declare(
     stablesolver
     GIT_REPOSITORY https://github.com/fontanf/stablesolver.git
-    GIT_TAG efab011b460c2675647fa1995011eb332ab9ec7d
+    GIT_TAG eeb6147adbf1c24ed1131f68ca266a41d41883b9
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../stablesolver/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(stablesolver)
@@ -138,7 +138,7 @@ endif()
 FetchContent_Declare(
     setcoveringsolver
     GIT_REPOSITORY https://github.com/fontanf/setcoveringsolver.git
-    GIT_TAG 6b24f8cb0a8e5baa6849283e5250aa4a3bd09aff
+    GIT_TAG 1992d69c16a136e00685581ccc996e140e231f6a
     #SOURCE_DIR "${PROJECT_SOURCE_DIR}/../setcoveringsolver/"
     EXCLUDE_FROM_ALL)
 FetchContent_MakeAvailable(setcoveringsolver)
