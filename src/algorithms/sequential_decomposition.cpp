@@ -94,6 +94,7 @@ Output knapsackwithconflictssolver::sequential_decomposition(
     };
     setcoveringsolver::greedy_or_greedy_reverse(
             setcovering_instance,
+            nullptr,
             setcovering_parameters);
 
     algorithm_formatter.end();
